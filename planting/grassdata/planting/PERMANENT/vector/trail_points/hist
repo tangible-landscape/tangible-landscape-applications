@@ -1,0 +1,14 @@
+COMMAND: v.edit map="trail_points" layer="1" type="point,line,boundary,centroid" tool="create" threshold=-1,0,0 snap="no"
+GISDBASE: /home/tangible/grassdata
+LOCATION: USIALE_patches MAPSET: acadia USER: tangible DATE: Wed May  3 13:49:24 2017
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+COMMAND: v.db.connect --quiet map="trail_points@acadia" driver="sqlite" database="/home/tangible/grassdata/USIALE_patches/acadia/sqlite/sqlite.db" table="trails_points" key="cat" layer="1" separator="pipe"
+GISDBASE: /home/tangible/grassdata
+LOCATION: USIALE_patches MAPSET: acadia USER: tangible DATE: Wed May  3 13:59:17 2017
+---------------------------------------------------------------------------------
+COMMAND: v.db.addcolumn "--q" "map=trail_points@acadia" "layer=1" "columns=label varchar (250)"
+GISDBASE: /home/tangible/grassdata
+LOCATION: USIALE_patches MAPSET: acadia USER: tangible DATE: Wed May  3 13:59:28 2017
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------

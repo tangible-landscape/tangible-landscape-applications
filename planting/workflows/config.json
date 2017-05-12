@@ -1,0 +1,143 @@
+{
+  "taskDir": "/home/tangible/analyses/acadia",
+  "logDir": "/tmp/",
+  "keyboard_events": {"stopTask": 370, "scanOnce": 344},
+  "tasks": [
+      {
+      "layers": [
+        [
+          "d.rast",
+          "map=depth"
+        ],
+        [
+          "d.rast",
+          "map=water"
+        ],
+        [
+          "d.vect",
+          "map=contours"
+        ]
+      ],
+      "base": "transfer_dem",
+      "layers_opacity": [1.0, 1.0, 0.5],
+      "time_limit": 60000,
+      "scanning_params": {"smooth": 10, "numscans": 2, "zexag": 1.5},
+      "analyses": "topography.py",
+      "filter" : {"threshold": 150, "debug": true},
+      "display": {"multiple": true, "average": 2, "size": [250, 200], "position": [2650, 620],
+                  "fontsize": 14, "maximum": [10, 80],
+                  "formatting_string": ["{:.1f} ha", "{:g} m"],
+                  "title": ["Area", "Depth"]},
+      "title": "Topo and water"
+    },
+    {
+      "layers": [
+        [
+          "d.rast",
+          "map=depth"
+        ],
+        [
+          "d.rast",
+          "map=water"
+        ],
+        [
+          "d.vect",
+          "map=contours"
+        ]
+      ],
+      "base": "transfer_dem",
+      "layers_opacity": [1.0, 1.0, 0.5],
+      "time_limit": 60000,
+      "calibrate": false,
+      "scanning_params": {"smooth": 8, "numscans": 1, "zexag": 1.5},
+      "analyses": "topography_views.py",
+      "filter" : {"threshold": 150, "debug": true},
+      "title": "Topography views"
+    },
+    {
+      "title": "Plants",
+      "layers": [
+         [
+          "d.rast",
+          "map=waterall"
+        ]
+      ],
+      "layers_opacity": [0.3],
+      "base": "transfer_dem",
+      "calibrate": false,
+      "time_limit": 100000, 
+      "scanning_params": {"smooth": 7, "numscans": 3, "zexag": 1.5},
+      "analyses": "patches.py", 
+      "filter" : {"threshold": 150, "debug": true},
+      "single_scan": true,
+      "display": {"multiple": true, "average": 2, "size": [450, 200], "position": [2950, 860],
+                  "fontsize": 10, "maximum": [100, 20, 6, 60, 2.5, 8],
+                  "formatting_string": ["{:.0f} %", "{:g}", "{:g}","{:.1f}","{:.2f}","{:.1f}"],
+                  "title": ["Remediated", "Patch #", "Richness", "Mean size", "Shannon", "Shape ind." ]}
+    },
+    {
+      "layers": [
+         [
+          "d.rast",
+          "map=waterall"
+        ]
+      ],
+      "layers_opacity": [0.3],
+      "base": "transfer_dem",
+      "time_limit": 60000,
+      "calibrate": true,
+      "scanning_params": {"smooth": 8, "numscans": 1, "zexag": 1.5},
+      "analyses": "planting_views.py",
+      "filter" : {"threshold": 150, "debug": true},
+      "title": "Plants views"
+    },
+    {
+      "layers": [
+        [
+          "d.rast",
+          "map=waterall"
+        ],
+        [
+          "d.vect",
+          "map=contours"
+        ],
+        [
+          "d.vect", "map=trail_points", "color=red", "fill_color=red",
+          "icon=basic/circle", "size=15", "attribute_column=label", "label_size=30"
+        ],
+        [
+          "d.rast", "map=trail"
+        ]
+      ],
+      "base": "transfer_dem",
+      "layers_opacity": [0.3, 0.5, 1.0, 1.0],
+      "time_limit": 60000,
+      "calibrate": true,
+      "scanning_params": {"smooth": 7, "numscans": 2, "zexag": 1.5},
+      "analyses": "trails.py",
+      "filter" : {"threshold": 150, "debug": false},
+      "profile": {"size": [650, 190], "position": [2800, 830], "limitx": [0, 2000],
+                  "limity": [10, 110], "ticks": 20, "raster": "scan_saved"},
+      "title": "Trails"
+    },
+    {
+      "layers": [
+         [
+          "d.rast",
+          "map=waterall"
+        ],
+        [
+          "d.vect", "map=trail"
+        ]
+      ],
+      "layers_opacity": [0.3, 1.0],
+      "base": "transfer_dem",
+      "time_limit": 60000,
+      "calibrate": true,
+      "scanning_params": {"smooth": 8, "numscans": 1, "zexag": 1.5},
+      "analyses": "planting_views.py",
+      "filter" : {"threshold": 150, "debug": true},
+      "title": "Trail views"
+    }
+  ]
+}

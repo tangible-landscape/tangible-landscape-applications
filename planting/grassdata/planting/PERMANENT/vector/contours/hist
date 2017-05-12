@@ -1,0 +1,3 @@
+COMMAND: v.edit --overwrite map="contours@acadia_data" layer="1" type="point,line,boundary,centroid" tool="create" threshold=-1,0,0 snap="no"
+GISDBASE: /home/tangible/grassdata
+LOCATION: USIALE_patches MAPSET: acadia_data USER: tangible DATE: Fri May 12 16:20:05 2017
