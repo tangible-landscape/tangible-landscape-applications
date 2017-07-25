@@ -1,0 +1,35 @@
+{
+  "taskDir": "/home/tangible/Documents/asheville_TL",
+  "tasks": [
+      {
+      "layers": [
+        [
+          "d.rast", "map=landuse_2011@scanning"
+        ],
+        [
+          "d.rast", "map=final@scanning"
+        ],
+        [
+          "d.vect", "map=protected_areas", "color=none", "fill_color=0:128:0"
+        ],
+        [
+          "d.vect", "map=roads"
+        ],
+        [
+          "d.vect", "map=constrain", "color=0:101:0", "fill_color=none", "width=6"
+        ],
+        [
+          "d.vect", "map=stimulus", "color=red", "fill_color=none", "width=6"
+        ]
+      ],
+      "base": "landuse_2011@scanning",
+      "single_scan": true,
+      "calibrate": true,
+      "layers_opacity": [1.0, 1.0, 1.0, 0.5, 1.0, 1.0],
+      "time_limit": 60000,
+      "scanning_params": {"smooth": 10, "numscans": 2, "zexag": 1},
+      "analyses": "analyses.py",
+      "title": "FUTURES"
+      }
+    ]
+}
