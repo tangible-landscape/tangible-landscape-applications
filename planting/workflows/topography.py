@@ -11,37 +11,27 @@ import grass.script as gscript
 from grass.exceptions import CalledModuleError
 from activities import updateDisplay
 from tangible_utils import get_environment
+from blender import blender_export_DEM
 
 import analyses
 
-PATH = '/run/user/1000/gvfs/smb-share:server=192.168.0.2,share=coupling/Watch/'
-
-def export_raster(raster, name, env):
-    out = '/tmp/{}.tif'.format(name)
-    gscript.run_command('r.out.gdal', flags='cf', input=raster, type="Float32", create='TFW=YES', out=out, env=env)
-
-    try:
-        shutil.copyfile(out,  PATH + '{}.tif'.format(name))
-    except OSError as e:
-        if e.errno == 95:
-            pass
 
 def run_contours(real_elev, scanned_elev, eventHandler, env, **kwargs):
     gscript.run_command('r.contour', input=scanned_elev, output='contours', step=5, flags='t', env=env)
 
 
-def run_dem(real_elev, scanned_elev, eventHandler, env, **kwargs):
+def run_dem(real_elev, scanned_elev, blender_path, eventHandler, env, **kwargs):
     gscript.run_command('g.copy', raster=[scanned_elev, 'topo_saved'], env=env)
     info = gscript.raster_info(map=scanned_elev)
     env2 = get_environment(raster=scanned_elev, res=(info['nsres'] + info['ewres']) / 4)
     gscript.run_command('r.resamp.interp', input=scanned_elev, output=scanned_elev + '_hires', method='bilinear', env=env2)
-    export_raster(scanned_elev + '_hires', 'terrain', env2)
+    blender_export_DEM(raster=scanned_elev + '_hires', name='terrain', time_suffix=False, path=blender_path, env=env2)
 
     
 #==============================================================================
 # Ponds
 #==============================================================================
-def run_water(scanned_elev, env, eventHandler, **kwargs):
+def run_water(scanned_elev, blender_path, env, eventHandler, **kwargs):
     # simwe
     gscript.mapcalc("{} = {} / 8.".format('scan10', scanned_elev), env=env)
     analyses.simwe(scanned_elev='scan10', depth='depth', rain_value=300, niterations=5, env=env)
@@ -69,12 +59,12 @@ def run_water(scanned_elev, env, eventHandler, **kwargs):
             i += 1
     if i == 0:
         gscript.mapcalc('ponds_export2 = null()', env=env)
-        export_raster('ponds_export', 'water', env)
+        blender_export_DEM(raster='ponds_export', name='water', time_suffix=False, path=blender_path, env=env)
         event = updateDisplay(value=[0, 0])
     else:
         expr += ', ponds_export, null())'
         gscript.mapcalc(expr, env=env)
-        export_raster('ponds_export', 'water', env)
+        blender_export_DEM(raster='ponds_export', name='water', time_suffix=False, path=blender_path, env=env)
         info = gscript.raster_info(map='ponds_export2')
         univar = gscript.parse_command('r.univar', map='ponds_export2', flags='g', env=env)
         gscript.write_command('r.colors', map='ponds_export2', rules='-', stdin='0 149:233:232\n100 149:233:232', env=env)
@@ -83,9 +73,6 @@ def run_water(scanned_elev, env, eventHandler, **kwargs):
         avg_depth = float(univar['mean'])
         # update dashboard
         event = updateDisplay(value=[area/10000., avg_depth])
-        print '----'
-        print area, avg_depth
-        print '----'
         eventHandler.postEvent(receiver=eventHandler.activities_panel, event=event)
     
     gscript.mapcalc('water = if(!isnull(ponds_export2), ponds, null())', env=env)

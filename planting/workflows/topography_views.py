@@ -5,16 +5,10 @@ Created on Tue Mar 28 17:32:38 2017
 @author: tangible
 """
 
-import os
 from math import sqrt
-import shutil
-import glob
 import grass.script as gscript
-from grass.exceptions import CalledModuleError
+from blender import blender_export_vector
 
-PATH = '/run/user/1000/gvfs/smb-share:server=192.168.0.2,share=coupling/Watch/'
-
-   
 
 def dist(p1, p2):
     x2 = (p1[0] - p2[0]) * (p1[0] - p2[0])
@@ -22,12 +16,12 @@ def dist(p1, p2):
     return sqrt(x2 + y2)
 
 
-def run_view(scanned_elev, env, **kwargs):
+def run_view(scanned_elev, blender_path, env, **kwargs):
     # regression
     group = 'color'
     before = 'topo_saved'
     elev_threshold = 20
-    color_threshold = 110
+    color_threshold = 100
     dist_threshold = 30
     change = 'change'
     arrow = 'arrow'
@@ -77,42 +71,4 @@ def run_view(scanned_elev, env, **kwargs):
         if not old_points or (dist(old_points[0], new_points[0]) > dist_threshold or dist(old_points[1], new_points[1]) > dist_threshold):
             print 'write'
             gscript.write_command('v.in.ascii', stdin=linetext, input='-', output=arrow_final, format='standard', flags='zn', env=env)
-            export_shp(arrow_final, 'vantage', env)
-            #export_line(new_points[0], new_points[1], name='vantage')
-
-
-def export_shp(vector, name, env):
-    tmp_directory = '/tmp/line'
-    try:
-        shutil.rmtree(tmp_directory)
-    except:
-        pass  
-    if not os.path.exists(tmp_directory):
-        os.mkdir(tmp_directory)
-
-    try:
-        gscript.run_command('v.out.ogr', input=vector, lco="SHPT=ARCZ",
-                            output=tmp_directory + '/' + name + '.shp', env=env)
-    except CalledModuleError, e:
-        print e
-        return
-    for each in glob.glob(tmp_directory + '/' + name + '.*'):
-        ext = each.split('.')[-1]
-        try:
-            shutil.copyfile(each,  PATH + name + '.' + ext)
-        except OSError as e:
-            if e.errno == 95:
-                pass
-
-
-def export_line(p1, p2, name):
-    out = '/tmp/{}.txt'.format(name)
-    with open(out, 'w') as f:
-        f.write('{},{},{}\n'.format(*p1))
-        f.write('{},{},{}\n'.format(*p2))
-        f.close()
-    try:
-        shutil.copyfile(out, PATH + name + '.txt')
-    except OSError as e:
-        if e.errno == 95:   
-            pass  
+            blender_export_vector(vector=arrow_final, name='vantage', z=True, vtype='line', path=blender_path, time_suffix=False, env=env)

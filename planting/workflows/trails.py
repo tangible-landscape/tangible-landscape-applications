@@ -4,21 +4,14 @@ Created on Tue Mar 28 17:32:38 2017
 
 @author: tangible
 """
-
-import os
-import shutil
-import glob
 from math import sqrt
-from os.path import expanduser
 import grass.script as gscript
-from grass.exceptions import CalledModuleError
-from activities import updateDisplay, updateProfile
+from activities import updateProfile
 from TSP import solve_tsp_numpy
 from tangible_utils import get_environment
+from blender import blender_export_vector
 
 import analyses
-
-PATH = '/run/user/1000/gvfs/smb-share:server=192.168.0.2,share=coupling/Watch/'
 
 
 def dist(points, i, j):
@@ -27,7 +20,7 @@ def dist(points, i, j):
     return sqrt(x2 + y2)
 
 
-def run_trails(real_elev, scanned_elev, eventHandler, env, **kwargs):
+def run_trails(real_elev, scanned_elev, blender_path, eventHandler, env, **kwargs):
     env2 = get_environment(raster=scanned_elev, n='n-100', s='s+100', e='e-100', w='w+100')
     resulting = 'trail'
     trail = 'trail'
@@ -127,28 +120,4 @@ def run_trails(real_elev, scanned_elev, eventHandler, env, **kwargs):
     gscript.run_command('v.generalize', input=trail, type='line', output=trail + 'gen', method='snakes', threshold=100, env=env)
     gscript.run_command('g.rename', vector=[trail + 'gen', trail], env=env)
     gscript.run_command('v.drape', input=trail, output=trail + '3d', elevation='toponds', env=env)
-    export_shp(trail + '3d', trail, env)
-
-
-def export_shp(vector, name, env):
-    tmp_directory = '/tmp/trail'
-    try:
-        shutil.rmtree(tmp_directory)
-    except:
-        pass  
-    if not os.path.exists(tmp_directory):
-        os.mkdir(tmp_directory)
-
-    try:
-        gscript.run_command('v.out.ogr', input=vector, lco="SHPT=ARCZ",
-                            output=tmp_directory + '/' + name + '.shp', env=env)
-    except CalledModuleError, e:
-        print e
-        return
-    for each in glob.glob(tmp_directory + '/' + name + '.*'):
-        ext = each.split('.')[-1]
-        try:
-            shutil.copyfile(each,  PATH + name + '.' + ext)
-        except OSError as e:
-            if e.errno == 95:
-                pass
+    blender_export_vector(vector=trail + '3d', name=trail, z=True, vtype='line', path=blender_path, time_suffix=False, env=env)
