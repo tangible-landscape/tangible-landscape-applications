@@ -99,7 +99,7 @@ def run_patches(real_elev, scanned_elev, scanned_color, blender_path, eventHandl
     
     # creates color table as temporary file
     # this is the training map from where the colors are taken
-    training = 'training_areas_water'
+    training = 'training_areas'
     color_path = '/tmp/patch_colors.txt'
     if not os.path.exists(color_path):
         color_table = gscript.read_command('r.colors.out', map=training, env=env).strip()
