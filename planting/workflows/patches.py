@@ -11,7 +11,7 @@ import glob
 from os.path import expanduser
 import analyses
 from tangible_utils import get_environment
-from blender import blender_export_vector, blender_send_file
+from blender import blender_export_PNG, blender_send_file
 from activities import updateDisplay
 import grass.script as gscript
 from grass.exceptions import CalledModuleError
@@ -99,7 +99,7 @@ def run_patches(real_elev, scanned_elev, scanned_color, blender_path, eventHandl
     
     # creates color table as temporary file
     # this is the training map from where the colors are taken
-    training = 'training_areas_water'
+    training = 'training_areas'
     color_path = '/tmp/patch_colors.txt'
     if not os.path.exists(color_path):
         color_table = gscript.read_command('r.colors.out', map=training, env=env).strip()
@@ -117,7 +117,6 @@ def run_patches(real_elev, scanned_elev, scanned_color, blender_path, eventHandl
     except CalledModuleError:
         return
 
-    env2 = get_environment(raster=patches, res=10)
     try:
         gscript.run_command('r.mask', flags='r', env=env)
     except:
@@ -128,17 +127,10 @@ def run_patches(real_elev, scanned_elev, scanned_color, blender_path, eventHandl
     for cat in cats:
         if cat in base_cat:
             continue
-        gscript.run_command('r.mask', raster=patches, maskcats=cat, env=env)
-        gscript.run_command('r.to.vect', flags='svt', input='scanned_scan_int', output=patches + '_2d', type='area', env=env2)
-        gscript.run_command('r.mask', flags='r', env=env)
-        gscript.run_command('v.drape', input=patches + '_2d', output='patch_' + trees[cat], elevation='scanned_scan_int', env=env2)
-        
+        gscript.mapcalc('patch_' + trees[cat] + ' = if(isnull({p}), 0, if({p} == {c}, {c}, 0))'.format(p=patches, c=cat), env=env)
+        gscript.run_command('r.colors', map='patch_' + trees[cat], color='grey', flags='n', env=env)
         toexport.append('patch_' + trees[cat])
     blender_send_file('empty.txt', path=blender_path)
 
-    for vector in toexport:
-        blender_export_vector(vector, vtype='area', z=True, time_suffix=True, path=blender_path, env=env)
-
-
-
-
+    for png in toexport:
+        blender_export_PNG(png, name=png, time_suffix=True, path=blender_path, env=env)
