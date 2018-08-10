@@ -109,7 +109,44 @@ def run_felt(scanned_elev, scanned_color, pops, eventHandler, env, **kwargs):
 #    gscript.mapcalc("treated_lide = {l} - {l} * ({t} / {m})".format(t=treatments_resampled, m=maxvalue, l='lide_den_int'), env=env2)
     
     
+def pops_process_simulation(infected, money_spent, treated_area, baselineValues, pops, baseline):
+    env = get_environment(raster=infected)
+    res = gscript.raster_info(infected)['nsres']
+    # infected cells
+    info = gscript.parse_command('r.univar', map=infected, flags='g', env=env)
+    counts = gscript.read_command('r.stats', flags='c', input=infected, env=env).strip().splitlines()
+    zero, cnts = counts[0].split(' ')
+    if zero == '0':
+        infected_cells = int(info['n']) - int(cnts)
+    else:
+        infected_cells = int(info['n'])
 
+    # crops affected - overlay:
+    # TODO: overlay with probability > 20% maybe? now it overlays with averaged scenario, which is larger than one run
+    gscript.mapcalc("crop_affected = if(! isnull({c}) && {i} > 0, 1, null())".format(c=pops["crop"], i=infected), env=env)
+    crop_info = gscript.parse_command('r.univar', map='crop_affected', flags='g', env=env)
+    if crop_info:
+        crop_affected_area = int(crop_info['n']) * res * res
+    else:
+        crop_affected_area = 0
+
+    # bar chart
+    record = (infected_cells * res * res, money_spent, treated_area, crop_affected_area)
+
+    # radar scaling
+    max_money = 5000000.
+    if baseline:
+        infected_scaled = 10
+    else:
+        infected_scaled = round(min(10 * record[0] / float(baselineValues[0]), 10))
+    money_scaled = round(min(10 * record[1] / max_money, 10))
+    treated_scaled = 0  # round(min(10 * record[2] / (max_money / 1.24), 10))
+    radar_values = (infected_scaled, money_scaled, treated_scaled, 0)
+
+    # not sure why the condition here
+    if baseline:
+        gscript.run_command('r.colors', map=infected, env=env, rules=pops['color_trees'])
+    return record, radar_values
 
    
 
