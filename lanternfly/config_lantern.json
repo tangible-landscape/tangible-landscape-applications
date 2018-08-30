@@ -1,17 +1,12 @@
 {
 	"taskDir": "/home/tangible/analyses/lanternfly/",
 	"logDir": "/tmp/",
-	"keyboard_events": {"animate": 346, "simulate": 345},
+	"keyboard_events": {
+		"animate": 346,
+		"simulate": 345
+	},
 	"tasks": [{
 		"layers": [
-		    [
-				"d.rast",
-				"map=osm_100m"
-			],
-			[
-				"d.rast",
-				"map=aphis_large"
-			],
 			[
 				"d.rast",
 				"map=treeofheaven"
@@ -42,49 +37,89 @@
 			"threshold": 10000000,
 			"debug": true
 		},
-		"display": {"multiple": true, "average": 2, "size": [180, 200], "position": [2055, 450],
-                  "fontsize": 9, "maximum": [4000, 15000],
-                  "formatting_string": ["{:n} mi2", "${:n}M"],
-                  "title": ["Area ", "Price"]},
-        "time_display": {"size": [140, 100], "position": [2075, 300], "fontsize": 25},
-		"title": "POPSS"
+		"display": {
+			"multiple": true,
+			"average": 2,
+			"size": [180, 200],
+			"position": [2055, 450],
+			"fontsize": 9,
+			"maximum": [4000, 15000],
+			"formatting_string": ["{:n} mi2", "${:n}M"],
+			"title": ["Area ", "Price"]
+		},
+		"time_display": {
+			"size": [140, 100],
+			"position": [2075, 300],
+			"fontsize": 25
+		},
+		"title": "POPS"
 	}],
-	"POPSS": {
-	    "model": {
-	        "output_series": "output",
-            "output": "output",
-            "species": "treeofheaven",
-            "probability": "probability",
-            "lvtree": "totalhost",
-            "start_time": 2017,
-            "end_time": 2020,
-            "spore_rate": 2,
-            "seasonality": "6,11",
-            "scale_1": 59,
-            "random_seed": 1,
-            "step": "month",
-            "lethal_temperature": -12.87,
-            "lethal_month": 1,
-            "infected": "infestation_2017",
-            "wind": "NONE",
-            "runs": 10,
-            "actual_temperature_file": "/home/tangible/analyses/lanternfly/actual_temperature.txt", 
-            "moisture_file": "/home/tangible/analyses/lanternfly/moist_coef.txt",
-            "temperature_file": "/home/tangible/analyses/lanternfly/temp_coef.txt"},
-	    "baseline": {
-	        "output": "baseline",
-	        "probability": "baseline_probability",
-	        "runs": 20},
-        "treatments": "treatments",
-        "treatment_efficacy": 0.9,
-        "species_treated": "species_treated",
-        "all_trees_treated": "all_trees_treated",
-        "infected_treated": "inf_treated",
-        "color_trees": "/home/tangible/analyses/lanternfly/color_table_dead_trees2.txt",
-        "color_probability": "/home/tangible/analyses/lanternfly/color_probability2.txt",
-        "crop": "grapes",
-        "price": "{} * 1.24",
-        "animation_speed": 1500,
-        "waitBeforeRun": 6000
+	"POPS": {
+		"model": {
+			"output_series": "output",
+			"output": "output",
+			"species": "treeofheaven",
+			"probability": "probability",
+			"lvtree": "totalhost",
+			"start_time": 2017,
+			"end_time": 2020,
+			"spore_rate": 2,
+			"seasonality": "6,11",
+			"scale_1": 59,
+			"random_seed": 1,
+			"step": "month",
+			"lethal_temperature": -12.87,
+			"lethal_month": 1,
+			"infected": "infestation_2017",
+			"wind": "NONE",
+			"runs": 10,
+			"actual_temperature_file": "/home/tangible/analyses/lanternfly/actual_temperature.txt",
+			"moisture_file": "/home/tangible/analyses/lanternfly/moist_coef.txt",
+			"temperature_file": "/home/tangible/analyses/lanternfly/temp_coef.txt"
+		},
+		"baseline": {
+			"output": "baseline",
+			"probability": "baseline_probability",
+			"runs": 20
+		},
+		"urlDashboard": "http://localhost:3000",
+		"urlSteering": "http://localhost:8888",
+		"treatments": "treatments",
+		"treatment_efficacy": 0.9,
+		"species_treated": "species_treated",
+		"all_trees_treated": "all_trees_treated",
+		"infected_treated": "inf_treated",
+		"color_trees": "/home/tangible/analyses/lanternfly/color_table_dead_trees2.txt",
+		"color_probability": "/home/tangible/analyses/lanternfly/color_probability2.txt",
+		"crop": "grapes",
+		"price": "{} * 1.24",
+		"animation_speed": 1500,
+		"waitBeforeRun": 6000,
+		"scenarios": {
+			"efficiency": {
+				"alias": "eff",
+				"options": ["high", "low"],
+				"values": {
+					"treatment_efficacy": {
+						"high": 0.9,
+						"low": 0.1
+					}
+				}
+			},
+			"weather": {
+				"alias": "weath",
+				"options": ["high", "low"],
+				"values": {
+					"actual_temperature_file": {
+						"high": "/home/tangible/analyses/lanternfly/actual_temperature.txt",
+						"low": "/home/tangible/analyses/lanternfly/actual_temperature.txt"
+					},
+					"temperature_file": {
+						"high": "/home/tangible/analyses/lanternfly/temp_coef.txt",
+						"low": "/home/tangible/analyses/lanternfly/temp_coef.txt"
+					}
+				}
+			}
+		}
 	}
 }
