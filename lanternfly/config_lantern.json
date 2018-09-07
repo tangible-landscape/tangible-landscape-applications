@@ -95,6 +95,14 @@
 		"price": "{} * 1.24",
 		"animation_speed": 1500,
 		"waitBeforeRun": 6000,
+		"dashboard": {
+			"columns": [
+				{"name": "Infected Area (mi)", "multiplication": 3.861e-7, "formatting": "{:.1f}"},
+				{"name": "Money Spent", "multiplication": 0.000001, "formatting": "{:.0f} M"},
+				{"name": "Area Treated (mi)", "multiplication": 3.861e-7, "formatting": "{:.1f}"},
+				{"name": "Crop affected (mi)", "multiplication": 3.861e-7, "formatting": "{:.1f}"}
+			]
+		},
 		"scenarios": {
 			"efficiency": {
 				"alias": "eff",
