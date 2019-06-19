@@ -28,7 +28,7 @@
 				"map=aphis_treatment_area", "color=none", "fill_color=168:121:34"
 			]
 		],
-		"layers_opacity": [0.5, 1, 0.2, 1, 1],
+		"layers_opacity": [1, 0.5, 1, 1, 0.3],
 		"base": "tree_of_heaven",
 		"scanning_params": {
 			"smooth": 5,
@@ -37,7 +37,7 @@
 			"resolution": 5,
 			"interpolate": false
 		},
-		"analyses": "felt_orig.py",
+		"analyses": "felt.py",
 		"filter": {
 			"threshold": 1900,
 			"debug": true
