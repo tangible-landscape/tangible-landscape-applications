@@ -1,0 +1,122 @@
+{
+	"keyboard_events": {
+		"visualization": 346,
+		"simulate": 345,
+		"stepforward": 367,
+		"stepback": 366
+	},
+	"tasks": [{
+		"layers": [
+			[
+				"d.rast",
+				"map=tree_of_heaven"
+			],
+			[
+				"d.rast",
+				"map=initial_infections_2018_single_count_pm", "values=0", "-i"
+			],
+			[
+				"d.vect",
+				"map=aphis_treatment_area", "color=none", "fill_color=yellow"
+			],
+			[
+				"d.vect",
+				"map=slf_county_boundaries", "color=50:50:50", "fill_color=none", "width=1"
+			],
+			[
+				"d.vect",
+				"map=slf_state_boundaries", "color=50:50:50", "fill_color=none", "width=2"
+			]
+		],
+		"layers_opacity": [0.5, 1, 0.2, 1, 1],
+		"base": "tree_of_heaven",
+		"scanning_params": {
+			"smooth": 5,
+			"numscans": 2,
+			"zexag": 1,
+			"resolution": 5,
+			"interpolate": false
+		},
+		"analyses": "felt_orig.py",
+		"filter": {
+			"threshold": 1900,
+			"debug": true
+		},
+		"display": {
+			"multiple": true,
+			"average": 2,
+			"relative_size": [0.45, 0.25],
+			"relative_position": [0.25, -0.55],
+			"fontsize": 12,
+			"maximum": [1000, 1000, 1000, 1000],
+			"formatting_string": ["{:.1f} ac", "{:.1f} ac", "${:.1f}K", "${:.1f}K"],
+			"title": ["Area", "Total area", "Price", "Total price"],
+			"vertical": true
+		},
+		"time_display": {
+			"relative_size": [0.1, 0.1],
+			"relative_position": [0.25, 1.05],
+			"fontsize": 15
+		},
+		"time_status_display": {
+			"relative_size": [0.2, 0.2],
+			"relative_position": [1.05, 1.05],
+			"fontsize": 40,
+			"beginning_of_year": false
+		},
+		"title": "PoPS"
+	}],
+	"POPS": {
+		"model": {
+			"model_name": "r.pops.spread",
+			"output_series": "output",
+			"host": "tree_of_heaven",
+			"probability_series": "probability",
+			"total_plants": "total_hosts",
+			"start_time": 2019,
+			"end_time": 2021,
+			"reproductive_rate": 2,
+			"seasonality": "6,11",
+			"wind": "NONE",
+			"kappa": 0,
+			"short_distance_scale": 59,
+			"infected": "initial_infections_2018_single_count_pm",
+			"step": "month",
+			"runs": 10,
+			"flags": "l",
+			"random_seed": 42,
+			"moisture_coefficient_file": "coefficient_1.txt",
+			"temperature_coefficient_file": {
+				"GOOD": "high_temp_coeff_2018_2022.txt",
+				"AVERAGE": "avg_temp_coeff_2018_2022.txt",
+				"BAD": "low_temp_coeff_2018_2022.txt"
+			},
+
+			"lethal_temperature": -12.87,
+			"temperature_file": {
+				"GOOD": "high_crit_temp_2018_2022.txt",
+				"AVERAGE": "avg_crit_temp_2018_2022.txt",
+				"BAD": "low_crit_temp_2018_2022.txt"
+			}
+		},
+		"dashboard": {
+			"session": 15,
+			"url": "https://popsmodel.org/api/"
+		},
+		"steering": {
+			"server": "server.py",
+			"url": "http://localhost",
+			"port_simulation": null,
+			"port_interface": 8888
+		},
+                "weather": "AVERAGE",
+		"treatments": "treatments",
+		"efficacy": 100,
+		"color_trees": "color_table_dead_trees2.txt",
+		"color_probability": "color_probability3.txt",
+		"color_treatments": "grey",
+		"cost_per_meter_squared": 1,
+		"animation_speed": 1500,
+		"waitBeforeRun": 6000
+	}
+}
