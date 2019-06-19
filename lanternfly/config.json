@@ -112,6 +112,7 @@
                 "weather": "AVERAGE",
 		"treatments": "treatments",
 		"efficacy": 100,
+                "unit": "acre",
 		"color_trees": "color_table_dead_trees2.txt",
 		"color_probability": "color_probability3.txt",
 		"color_treatments": "grey",
