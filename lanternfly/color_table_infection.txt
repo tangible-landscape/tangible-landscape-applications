@@ -1,0 +1,3 @@
+# colors from orange to yellow
+0 #E84D06
+100 #F9F902

@@ -1,0 +1,5 @@
+# colors from blue-green though green to purple
+0 #00C49D
+45 #00FF80
+70 #B64880
+100 #991919

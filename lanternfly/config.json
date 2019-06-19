@@ -9,7 +9,15 @@
 		"layers": [
 			[
 				"d.rast",
-				"map=tree_of_heaven"
+				"map=dem"
+			],
+			[
+				"d.vect",
+				"map=slf_county_boundaries", "color=84:84:84", "fill_color=none", "width=1"
+			],
+			[
+				"d.vect",
+				"map=slf_state_boundaries", "color=74:74:74", "fill_color=none", "width=2"
 			],
 			[
 				"d.rast",
@@ -17,15 +25,7 @@
 			],
 			[
 				"d.vect",
-				"map=aphis_treatment_area", "color=none", "fill_color=yellow"
-			],
-			[
-				"d.vect",
-				"map=slf_county_boundaries", "color=50:50:50", "fill_color=none", "width=1"
-			],
-			[
-				"d.vect",
-				"map=slf_state_boundaries", "color=50:50:50", "fill_color=none", "width=2"
+				"map=aphis_treatment_area", "color=none", "fill_color=168:121:34"
 			]
 		],
 		"layers_opacity": [0.5, 1, 0.2, 1, 1],
@@ -114,8 +114,8 @@
 		"treatments": "treatments",
 		"efficacy": 100,
                 "unit": "acre",
-		"color_trees": "color_table_dead_trees2.txt",
-		"color_probability": "color_probability3.txt",
+		"color_trees": "color_table_infection.txt",
+		"color_probability": "color_table_probability.txt",
 		"color_treatments": "grey",
 		"cost_per_meter_squared": 1,
 		"animation_speed": 1500,
