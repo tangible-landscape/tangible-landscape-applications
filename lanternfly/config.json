@@ -85,6 +85,7 @@
 			"runs": 10,
 			"flags": "l",
 			"random_seed": 42,
+			"treatment_application": "ratio_to_all",
 			"moisture_coefficient_file": "coefficient_1.txt",
 			"temperature_coefficient_file": {
 				"GOOD": "high_temp_coeff_2018_2022.txt",
