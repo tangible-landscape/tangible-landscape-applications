@@ -1,9 +1,11 @@
 {
 	"keyboard_events": {
-		"visualization": 346,
-		"simulate": 345,
-		"stepforward": 367,
-		"stepback": 366
+		"346": "visualization",
+		"345": "simulate",
+		"367": "stepforward",
+		"366": "stepback",
+		"344": "reset",
+		"27": "reset"
 	},
 	"tasks": [{
 		"layers": [
@@ -13,11 +15,11 @@
 			],
 			[
 				"d.vect",
-				"map=slf_county_boundaries", "color=84:84:84", "fill_color=none", "width=1"
+				"map=slf_county_boundaries_carto", "color=84:84:84", "fill_color=none", "width=1"
 			],
 			[
 				"d.vect",
-				"map=slf_state_boundaries", "color=74:74:74", "fill_color=none", "width=2"
+				"map=slf_state_boundaries_carto", "color=74:74:74", "fill_color=none", "width=2"
 			],
 			[
 				"d.rast",
@@ -32,36 +34,31 @@
 		"base": "tree_of_heaven",
 		"scanning_params": {
 			"smooth": 5,
-			"numscans": 2,
+			"numscans": 1,
 			"zexag": 1,
 			"resolution": 5,
 			"interpolate": false
 		},
-		"analyses": "felt.py",
+		"analyses": "detect.py",
 		"filter": {
-			"threshold": 1900,
+			"threshold": 1900000000,
 			"debug": true
 		},
 		"display": {
 			"multiple": true,
 			"average": 2,
-			"relative_size": [0.45, 0.25],
-			"relative_position": [0.25, -0.55],
+			"relative_size": [0.25, 0.08],
+			"relative_position": [1.01, 0.05],
 			"fontsize": 12,
-			"maximum": [1000, 1000, 1000, 1000],
-			"formatting_string": ["{:.1f} ac", "{:.1f} ac", "${:.1f}K", "${:.1f}K"],
-			"title": ["Area", "Total area", "Price", "Total price"],
+			"maximum": [7413, 30],
+			"formatting_string": ["{:.1f} ac", "${:.1f}M"],
+			"title": ["Area", "Price"],
 			"vertical": true
 		},
-		"time_display": {
-			"relative_size": [0.1, 0.1],
-			"relative_position": [0.25, 1.05],
-			"fontsize": 15
-		},
 		"time_status_display": {
-			"relative_size": [0.2, 0.2],
-			"relative_position": [1.05, 1.05],
-			"fontsize": 40,
+			"relative_size": [0.18, 0.15],
+			"relative_position": [0.82, 0.82],
+			"fontsize": 50,
 			"beginning_of_year": false
 		},
 		"title": "PoPS"
@@ -83,7 +80,7 @@
 			"infected": "initial_infections_2018_single_count_pm",
 			"step": "month",
 			"runs": 10,
-			"flags": "l",
+			"flags": "",
 			"random_seed": 42,
 			"treatment_application": "ratio_to_all",
 			"moisture_coefficient_file": "coefficient_1.txt",
@@ -101,7 +98,7 @@
 			}
 		},
 		"dashboard": {
-			"session": 15,
+			"session": 26,
 			"url": "https://popsmodel.org/api/"
 		},
 		"steering": {
@@ -113,12 +110,13 @@
                 "weather": "AVERAGE",
 		"treatments": "treatments",
 		"efficacy": 100,
-                "unit": "acre",
-		"color_trees": "color_table_infection.txt",
-		"color_probability": "color_table_probability.txt",
+        "unit": "acre",
+        "cost_unit": 1e6,
+		"color_trees": "color_table_infection_fire.txt",
+		"color_probability": "color_table_probability_fire.txt",
 		"color_treatments": "grey",
 		"cost_per_meter_squared": 1,
 		"animation_speed": 1500,
-		"waitBeforeRun": 6000
+		"waitBeforeRun": 3000
 	}
 }
