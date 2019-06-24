@@ -1,0 +1,6 @@
+# dark grayish DEM with dark lows and white mountains
+0% #191A1A
+1 #191A1A
+1 #343332
+30% #343332
+100% #5D5D5D

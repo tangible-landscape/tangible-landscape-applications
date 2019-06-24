@@ -1,0 +1,93 @@
+{
+	"taskDir": "/home/anna/Documents/Projects/SOD2/POPS/SOD",
+	"logDir": "/tmp/",
+	"keyboard_events": {"animate": 346, "simulate": 345},
+	"tasks": [{
+		"layers": [
+			[
+				"d.rast",
+				"map=extended_dem_10m"
+			],
+			[
+				"d.rast",
+				"map=inf_2016_null"
+			]
+		],
+		"layers_opacity": [1, 1],
+		"base": "extended_dem_10m",
+		"scanning_params": {
+			"smooth": 5,
+			"numscans": 2,
+			"zexag": 1,
+			"resolution": 5
+		},
+		"analyses": "felt.py",
+		"filter": {
+			"threshold": 1900,
+			"debug": true
+		},
+		"display": {"multiple": true, "average": 2, "size": [140, 200], "position": [2125, 450],
+                  "fontsize": 9, "maximum": [400, 4000],
+                  "formatting_string": ["{:g} ha", "${:n}K"],
+                  "title": ["Area ", "Price"]},
+        "time_display": {"size": [140, 100], "position": [2125, 300], "fontsize": 25},
+		"title": "SOD"
+	}],
+	"POPS": {
+	    "model": {
+	        "output_series": "output",
+            "output": "output",
+            "species": "lide_den_int",
+            "probability": "probability",
+            "lvtree": "all_den_int",
+            "start_time": 2016,
+            "end_time": 2021,
+            "spore_rate": 4.1,
+            "seasonality": "6,11",
+            "wind": "W",
+            "kappa": 2,
+            "infected": "inf_2016",
+            "runs": 10,
+            "step": "week",
+            "random_seed": 42,
+            "moisture_file": "/home/anna/Documents/Projects/SOD2/POPS/SOD/weather_files/moisture_file_future_2019.txt",
+            "temperature_file": "/home/anna/Documents/Projects/SOD2/POPS/SOD/weather_files/temperature_file_future_2019.txt"},
+	    "baseline": {
+	        "output": "baseline",
+	        "probability": "baseline_probability",
+	        "runs": 20},
+	    "dashboard": {
+	        "columns": [
+	           {"name": "Infected Area (ha)", "multiplication": 1e-4, "formatting": "{:.1f}"},
+   	           {"name": "Number of Dead Tanoaks", "multiplication": 1, "formatting": "{:.1f}"},
+	           {"name": "Money Spent", "multiplication": 0.001, "formatting": "{:.0f} K"},
+	           {"name": "Area Treated (ha)", "multiplication": 1e-4, "formatting": "{:.1f}"}
+	        ]
+	    },
+	    "urlDashboard": "http://localhost:3000",
+		"urlSteering": "http://localhost:8887",
+        "treatments": "treatments",
+        "treatment_efficacy": 0.9,
+        "species_treated": "species_treated",
+        "all_trees_treated": "all_trees_treated",
+        "infected_treated": "inf_treated",
+        "price": "{} * 1.24",
+		"color_trees": "/home/anna/Documents/Projects/SOD2/POPS/SOD/color_table_dead_trees2.txt",
+		"color_probability": "/home/anna/Documents/Projects/SOD2/POPS/SOD/color_probability2.txt",
+        "animation_speed": 1500,
+        "waitBeforeRun": 6000,
+        "scenarios": {
+			"efficiency": {
+				"alias": "efficiency",
+				"options": ["high", "low"],
+				"values": {
+					"treatment_efficacy": {
+						"high": 0.9,
+						"low": 0.1
+					}
+				}
+			}
+		}
+	}
+}
+

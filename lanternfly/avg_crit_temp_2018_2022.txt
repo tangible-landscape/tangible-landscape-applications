@@ -1,0 +1,5 @@
+avg_spread_crit_temp_slf_2018_2022_pm.1
+avg_spread_crit_temp_slf_2018_2022_pm.2
+avg_spread_crit_temp_slf_2018_2022_pm.3
+avg_spread_crit_temp_slf_2018_2022_pm.4
+avg_spread_crit_temp_slf_2018_2022_pm.5

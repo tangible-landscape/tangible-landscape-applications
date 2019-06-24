@@ -1,0 +1,38 @@
+{
+  "taskDir": "/Users/cga/analyses/BH_island/",
+  "keyboard_events": {"button_breach": 344, "scanOnce": 347},
+  "tasks": [
+    {
+      "layers": [
+        [
+          "d.rast",
+          "map=scan"
+        ],
+        [
+          "d.rast", "map=lake"
+        ],
+        [
+          "d.vect", "map=buildings", "color=0:0:0"
+        ],
+        [
+          "d.vect",
+          "map=flooded", "color=251:1:6", "fill_color=none", "width=4"
+        ],
+        [
+          "d.vect", "map=breach", "fill_color=0:0:254", "size=40", "icon=basic/arrow1"
+        ],
+        [
+          "d.vect", "map=score", "color=32:254:254", "size=1", "attribute_column=score",
+          "label_color=254:254:254", "label_size=35", "font=\"Arial Bold\""
+        ]
+      ],
+      "single_scan": true,
+      "base": "BH_ground_1m_base",
+      "time_limit": 3000000,
+      "scanning_params": {"smooth": 10, "numscans": 1, "zexag": 1},
+      "analyses": "flooding.py",
+      "filter" : {"threshold": 200000, "debug": true},
+      "title": "Flooding"
+    }
+  ]
+}
