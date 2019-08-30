@@ -1,93 +1,136 @@
 {
-	"taskDir": "/home/anna/Documents/Projects/SOD2/POPS/SOD",
-	"logDir": "/tmp/",
-	"keyboard_events": {"animate": 346, "simulate": 345},
+	"keyboard_events": {
+		"346": "visualization",
+		"345": "simulate",
+		"367": "stepforward",
+		"366": "stepback",
+		"344": "reset",
+		"27": "reset"
+	},
 	"tasks": [{
 		"layers": [
 			[
 				"d.rast",
-				"map=extended_dem_10m"
+				"map=ortho_extended"
 			],
 			[
 				"d.rast",
-				"map=inf_2016_null"
+				"map=ocean@PERMANENT"
+			],
+			[
+				"d.rast",
+				"map=ocean@PERMANENT", "-n", "bgcolor=34:71:0"
+			],
+			[
+				"d.vect",
+				"map=roads_clipped", "color=150:150:150"
+			],
+			[
+				"d.vect",
+				"map=NHDFlowline_clipped", "color=80:170:255",
+				"where=\"FCODE >= 46006\""
+			],
+			[
+				"d.vect", "map=roads_clipped",
+				"where=\"FULL_STREE is not NULL\"", "color=200:200:200",
+				"width=3"
+			],
+			[
+				"d.rast",
+				"map=inf_2019eu_null"
+			],
+			[
+				"d.labels",
+				"labels=points"
+			],
+			[
+				"d.barscale", "at=13,7", "length=1", "units=kilometers", "segment=4", "width=2", "color=white", "bgcolor=none", "fontsize=25"
+			],
+			[
+				"d.northarrow", "style=arrow2", "at=8.0,4.0", "rotation=90", "color=none", "fill_color=white", "text_color=white", "fontsize=30"
 			]
 		],
-		"layers_opacity": [1, 1],
+		"layers_opacity": [1, 0.4, 0.1, 0.2, 1, 1, 1, 0.4, 1, 1],
 		"base": "extended_dem_10m",
 		"scanning_params": {
 			"smooth": 5,
-			"numscans": 2,
+			"numscans": 1,
 			"zexag": 1,
 			"resolution": 5
 		},
-		"analyses": "felt.py",
+		"analyses": "detect.py",
 		"filter": {
-			"threshold": 1900,
+			"threshold": 1350,
 			"debug": true
 		},
-		"display": {"multiple": true, "average": 2, "size": [140, 200], "position": [2125, 450],
-                  "fontsize": 9, "maximum": [400, 4000],
-                  "formatting_string": ["{:g} ha", "${:n}K"],
-                  "title": ["Area ", "Price"]},
-        "time_display": {"size": [140, 100], "position": [2125, 300], "fontsize": 25},
+		"display": {
+			"multiple": true,
+			"average": 2,
+			"relative_size": [0.28, 0.2],
+			"relative_position": [0.97, 0.3],
+			"fontsize": 12,
+			"maximum": [350, 2000, 1500, 8000],
+			"formatting_string": ["{:.1f} ac", "{:.1f} ac", "${:.1f}K", "${:.1f}K"],
+			"title": ["Area", "Total area", "Price", "Total price"],
+			"vertical": true
+		},
+		"time_display": {
+			"relative_size": [0.7, 0.08],
+			"relative_position": [0.3, 1.0],
+			"fontsize": 33
+		},
 		"title": "SOD"
 	}],
 	"POPS": {
-	    "model": {
-	        "output_series": "output",
-            "output": "output",
-            "species": "lide_den_int",
-            "probability": "probability",
-            "lvtree": "all_den_int",
-            "start_time": 2016,
-            "end_time": 2021,
-            "spore_rate": 4.1,
-            "seasonality": "6,11",
-            "wind": "W",
-            "kappa": 2,
-            "infected": "inf_2016",
-            "runs": 10,
-            "step": "week",
-            "random_seed": 42,
-            "moisture_file": "/home/anna/Documents/Projects/SOD2/POPS/SOD/weather_files/moisture_file_future_2019.txt",
-            "temperature_file": "/home/anna/Documents/Projects/SOD2/POPS/SOD/weather_files/temperature_file_future_2019.txt"},
-	    "baseline": {
-	        "output": "baseline",
-	        "probability": "baseline_probability",
-	        "runs": 20},
-	    "dashboard": {
-	        "columns": [
-	           {"name": "Infected Area (ha)", "multiplication": 1e-4, "formatting": "{:.1f}"},
-   	           {"name": "Number of Dead Tanoaks", "multiplication": 1, "formatting": "{:.1f}"},
-	           {"name": "Money Spent", "multiplication": 0.001, "formatting": "{:.0f} K"},
-	           {"name": "Area Treated (ha)", "multiplication": 1e-4, "formatting": "{:.1f}"}
-	        ]
-	    },
-	    "urlDashboard": "http://localhost:3000",
-		"urlSteering": "http://localhost:8887",
-        "treatments": "treatments",
-        "treatment_efficacy": 0.9,
-        "species_treated": "species_treated",
-        "all_trees_treated": "all_trees_treated",
-        "infected_treated": "inf_treated",
-        "price": "{} * 1.24",
-		"color_trees": "/home/anna/Documents/Projects/SOD2/POPS/SOD/color_table_dead_trees2.txt",
-		"color_probability": "/home/anna/Documents/Projects/SOD2/POPS/SOD/color_probability2.txt",
-        "animation_speed": 1500,
-        "waitBeforeRun": 6000,
-        "scenarios": {
-			"efficiency": {
-				"alias": "efficiency",
-				"options": ["high", "low"],
-				"values": {
-					"treatment_efficacy": {
-						"high": 0.9,
-						"low": 0.1
-					}
-				}
-			}
+		"model": {
+			"model_name": "r.pops.spread",
+			"output_series": "output",
+			"host": "lide_100_median",
+			"probability_series": "probability",
+			"total_plants": "lemma_max100m",
+			"start_time": 2019,
+			"end_time": 2023,
+			"reproductive_rate": 1.5,
+			"seasonality": "1,12",
+			"treatment_month": 12,
+			"treatment_application": "all_infected_in_cell",
+			"natural_distance": 407,
+			"natural_direction": "W",
+			"natural_direction_strength": 3,
+			"natural_dispersal_kernel": "exponential",
+			"infected": "inf_2019eu",
+			"step": "week",
+			"runs": 10,
+			"flags": "ls",
+			"weather_coefficient_file": "average_weather.txt"
+		},
+		"steering": {
+			"server": "server.py",
+			"url": "http://localhost",
+			"port_simulation": "8001",
+			"port_interface": 8888,
+			"move_current_year": true
+		},
+		"treatments": "treatments",
+		"region": "simulation_max",
+		"difference": "diff",
+		"unit": "acre",
+		"efficacy": 100,
+		"weather": "AVERAGE",
+		"cost_unit": 1e3,
+		"cost_per_meter_squared": 1.23,
+		"color_trees": "color_table_dead_trees2.txt",
+		"color_probability": "color_probability3.txt",
+		"color_difference": "color_difference.txt",
+		"color_treatments": "color_treatments.txt",
+		"results_opacity": 1,
+		"animation_speed": 1500,
+		"waitBeforeRun": 2000,
+		"treatments_vstyle": {
+			"label_size": 16,
+			"label_color": "#FFFF80",
+			"font": "n019044l",
+			"width": 3
 		}
 	}
 }
-
