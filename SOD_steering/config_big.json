@@ -10,7 +10,7 @@
 		"layers": [
 			[
 				"d.rast",
-				"map=ortho_extended"
+				"map=naip_10m"
 			],
 			[
 				"d.rast",
@@ -18,24 +18,24 @@
 			],
 			[
 				"d.rast",
-				"map=ocean@PERMANENT"
+				"map=ocean2@PERMANENT"
 			],
 			[
 				"d.rast",
-				"map=ocean@PERMANENT", "-n", "bgcolor=34:71:0"
+				"map=ocean2@PERMANENT", "-n", "bgcolor=34:71:0"
 			],
 			[
 				"d.vect",
-				"map=roads_clipped", "color=150:150:150"
+				"map=roads_clipped2", "color=150:150:150"
 			],
 			[
 				"d.vect",
-				"map=NHDFlowline_clipped", "color=80:170:255",
+				"map=NHDFlowline_clipped2", "color=80:170:255",
 				"where=\"FCODE >= 46006\""
 			],
 			[
-				"d.vect", "map=roads_clipped",
-				"where=\"FULL_STREE is not NULL\"", "color=130:130:130",
+				"d.vect", "map=roads_clipped2",
+				"where=\"FULLNAME is not NULL\"", "color=130:130:130",
 				"width=3"
 			],
 			[
@@ -55,7 +55,7 @@
 		],
 		"layers_opacity": [1, 1, 0.4, 0.1, 0.2, 1, 1, 1, 0.4, 1, 1],
 		"layers_checked": [true, false, true, true, true, true, true, true, true, true, true],
-		"base": "extended_dem_10m",
+		"base": "elevation",
 		"scanning_params": {
 			"smooth": 5,
 			"numscans": 1,

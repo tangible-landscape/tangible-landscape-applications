@@ -21,7 +21,7 @@ from pops_gui import updateDisplay
 
 def run_felt(scanned_elev, scanned_color, pops, eventHandler, env, **kwargs):
 ##############################
-    color_threshold = 140
+    color_threshold = 60
 ###############################
     size_threshold = 10
     superpixels = 'superpixels'
@@ -38,9 +38,10 @@ def run_felt(scanned_elev, scanned_color, pops, eventHandler, env, **kwargs):
     gscript.run_command('r.fill.stats', flags='k', input=superpixels, output=superpixels_filled,
                         distance=3, mode='mode', cells=6, env=env)
     gscript.mapcalc('{c} = ({r} + {g} + {b}) / 3.'.format(c=mean_color, r=scanned_color + '_r', g=scanned_color + '_g', b=scanned_color + '_b'), env=env)
-    data = gscript.read_command('r.univar', flags='gt', separator='comma', map=mean_color, zones=superpixels_filled, env=env).strip().splitlines()
+    data = gscript.read_command('r.univar', flags='egt', separator='comma', map=mean_color, zones=superpixels_filled, env=env).strip().splitlines()
     data = np.genfromtxt(data, delimiter=',', skip_header=1)
-    zones = list(data[(data[:, 7] < color_threshold) & (data[:, 2] > size_threshold)][:, 0])
+    #zones = list(data[(data[:, 7] < color_threshold) & (data[:, 2] > size_threshold)][:, 0])
+    zones = list(data[(data[:, 15] < color_threshold) & (data[:, 2] > size_threshold)][:, 0])
     #print "detected zones:", zones
     if not zones:
         gscript.mapcalc('{t} = null()'.format(t=treatments), env=env)
