@@ -1,0 +1,114 @@
+{  "handsoff": [
+                "d.text", 
+                "at=6,45",
+                "size=20",
+                "color=red",
+                "text='HANDS OFF'"
+        ],
+  "duration_handsoff": 1000,
+  "duration_handsoff_after": 2000,
+  "tasks": [
+    {
+      "layers": [
+        [
+          "d.rast", 
+          "map=drain_dem"
+        ], 
+        [
+          "d.vect", 
+          "map=drain_contours_20"
+        ],
+        [
+          "d.vect", 
+          "map=drain_contours_100",
+          "width=2"
+      ],
+        [
+          "d.vect", 
+          "map=drain_line",
+          "width=3", "color=15:125:255"
+        ]
+      ],
+     "layers_opacity": [1.0, 0.5, 0.5, 1.0],
+      "sublayers": [
+        ["d.vect", "map=drain_targets", "cats=1",
+         "color=blue", "fill_color=blue", "width=5", "size=15", "icon=extra/ring"],
+        ["d.vect", "map=drain_targets", "cats=2",
+         "color=blue", "fill_color=blue", "width=5", "size=15", "icon=extra/ring"],
+        ["d.vect", "map=drain_targets", "cats=3",
+         "color=blue", "fill_color=blue", "width=5", "size=15", "icon=extra/ring"],
+        ["d.vect", "map=drain_targets", "cats=4",
+         "color=blue", "fill_color=blue", "width=5", "size=15", "icon=extra/ring"],
+        ["d.vect", "map=drain_targets", "cats=5",
+         "color=blue", "fill_color=blue", "width=5", "size=15", "icon=extra/ring"],
+        ["d.vect", "map=drain_targets", "cats=6",
+         "color=blue", "fill_color=blue", "width=5", "size=15", "icon=extra/ring"],
+        ["d.vect", "map=drain_targets", "cats=7",
+         "color=blue", "fill_color=blue", "width=5", "size=15", "icon=extra/ring"]
+      ],
+      "solutions": [
+        ["d.vect", "map=drain_solutions", "cats=1",
+         "color=green", "fill_color=green", "width=1", "size=12", "icon=basic/circle",
+         "attribute_column=label", "label_color=black", "label_size=17", "font=\"Liberation Sans:Bold\""],
+        ["d.vect", "map=drain_solutions", "cats=2",
+         "color=green", "fill_color=green", "width=1", "size=12", "icon=basic/circle",
+         "attribute_column=label", "label_color=black", "label_size=17", "font=\"Liberation Sans:Bold\""],
+        ["d.vect", "map=drain_solutions", "cats=3",
+         "color=green", "fill_color=green", "width=1", "size=12", "icon=basic/circle",
+         "attribute_column=label", "label_color=black", "label_size=17", "font=\"Liberation Sans:Bold\""],
+        ["d.vect", "map=drain_solutions", "cats=4",
+         "color=green", "fill_color=green", "width=1", "size=12", "icon=basic/circle",
+         "attribute_column=label", "label_color=black", "label_size=17", "font=\"Liberation Sans:Bold\""],
+        ["d.vect", "map=drain_solutions", "cats=5",
+         "color=green", "fill_color=green", "width=1", "size=12", "icon=basic/circle",
+         "attribute_column=label", "label_color=black", "label_size=17", "font=\"Liberation Sans:Bold\""],
+        ["d.vect", "map=drain_solutions", "cats=6",
+         "color=green", "fill_color=green", "width=1", "size=12", "icon=basic/circle",
+         "attribute_column=label", "label_color=black", "label_size=17", "font=\"Liberation Sans:Bold\""],
+        ["d.vect", "map=drain_solutions", "cats=7",
+         "color=green", "fill_color=green", "width=1", "size=12", "icon=basic/circle",
+         "attribute_column=label", "label_color=black", "label_size=17", "font=\"Liberation Sans:Bold\""]
+      ],
+      "base": "drain_dem",
+      "calibrate": true,
+      "time_limit": 600, 
+      "scanning_params": {"smooth": 8, "numscans": 2, "zexag": 1, "interpolate": false},
+      "analyses": "drain.py", 
+      "filter" : {"threshold": 75000, "debug": false},
+      "title": "Drain task"
+    },
+    {
+      "layers": [
+        [
+          "d.rast", 
+          "map=flow_flow"
+        ],
+        [
+          "d.vect",
+          "map=flow_rain", "color=none",
+          "fill_color=white"
+        ],
+        [
+          "d.rast", 
+          "map=flow_flow",
+          "values=0-0.04", "-i"
+        ],
+        [
+          "d.vect", 
+          "map=flow_contours"
+        ],
+        [
+          "d.vect", "map=flow_target",
+          "color=red", "fill_color=red", "width=5", "size=15", "icon=basic/circle"
+        ]
+      ], 
+      "base": "flow_dem",
+      "time_limit": 600, 
+      "calibrate": true,
+      "scanning_params": {"smooth": 10, "numscans": 1, "zexag": 3, "interpolate": true},
+      "analyses": "flow.py", 
+      "filter" : {"threshold": 20000, "debug": true},
+      "title": "Channel task"
+    }
+  ]
+}
