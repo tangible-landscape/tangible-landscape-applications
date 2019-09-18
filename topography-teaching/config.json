@@ -109,6 +109,220 @@
       "analyses": "flow.py", 
       "filter" : {"threshold": 20000, "debug": true},
       "title": "Channel task"
+    },
+        {
+      "layers": [
+        [
+          "d.rast", 
+          "map=scan"
+        ], 
+        [
+          "d.vect", 
+          "map=flow_contours"
+        ],
+        [
+          "d.rast",
+          "map=transfer_dam"
+        ]
+      ], 
+      "layer_opacity": [1.0, 0.6, 1.0],
+      "base": "flow_dem",
+      "time_limit": 600, 
+      "display": {"relative_size": [0.1, 0.4], "relative_position": [1.01, 0.1], "fontsize": 15, "average": 3, "maximum": 140, "formatting_string": "{:.0f}"},
+      "analyses": "dams.py", 
+      "filter" : {"threshold": 6500, "debug": false},
+      "scanning_params": {"smooth": 10, "numscans": 1, "zexag": 1, "interpolate": true},
+      "title": "Dams"
+    },
+    {
+          "layers": [
+        [
+          "d.rast", 
+          "map=cutfill1_dem2"
+        ], 
+        [
+            "d.vect", 
+            "map=cutfill1_dem2_contours_5",
+            "width=3"
+        ],
+        [
+            "d.vect", 
+            "map=cutfill1_dem2_contours_05", "color=77:77:77"
+        ],
+        [
+            "d.vect",
+            "map=cutfill1_boundaries", "color=red", "fill_color=none", "width=3"
+        ]
+      ], 
+      "base": "cutfill1_dem2",
+      "time_limit": 600, 
+      "scanning_params": {"smooth": 10, "numscans": 2, "zexag": 1, "interpolate": false},
+      "analyses": "cutfill.py", 
+      "display": {"relative_size": [0.1, 0.4], "relative_position": [1.01, 0.1], "fontsize": 18, "average": 2, "maximum": 400, "formatting_string": "{}"},
+      "filter" : {"threshold": 800, "debug": true},
+      "title": "Cut and Fill"
+    },
+        {
+      "layers": [
+        [
+          "d.rast", 
+          "map=cutfill2_dem2"
+        ],
+        [
+          "d.rast", 
+          "map=cutfill2_diff"
+        ],
+        [
+          "d.vect", 
+          "map=cutfill2_dem2_contours_5",
+          "width=2"
+        ],
+        [
+          "d.vect", 
+          "map=cutfill2_dem2_contours_05", "color=black"
+        ]
+      ], 
+      "base": "cutfill2_dem2",
+      "time_limit": 600, 
+      "analyses": "cutfill_colors.py", 
+      "scanning_params": {"smooth": 10, "numscans": 2, "zexag": 1, "interpolate": false},
+      "filter" : {"threshold": 900, "debug": true},
+      "title": "Cut and Fill with colors"
+    },
+        {
+      "layers": [
+          [
+            "d.rast", 
+            "map=trails1_dem"
+          ], 
+          [
+            "d.vect", 
+            "map=trails1_contours_10"
+          ],
+          [
+            "d.vect", 
+            "map=trails1_contours_50",
+            "width=2"
+          ],
+          [
+            "d.vect",
+            "map=trails1_points", "width=4", "size=15", "color=red", "fill_color=red",
+            "attribute_column=label", "label_size=25", "xref=right", "yref=top"
+          ],
+          [
+            "d.rast", 
+            "map=trails1_slopedir"
+          ]
+      ], 
+      "base": "trails1_dem",
+      "layers_opacity": [1.0, 0.5, 0.5, 1.0, 1.0],
+      "calibration_scanning_params": {"smooth": 8, "numscans": 2, "zexag": 1, "interpolate": true},
+      "scanning_params": {"smooth": 8, "numscans": 2, "zexag": 1, "interpolate": false},
+      "time_limit": 600, 
+      "calibrate": true,
+      "profile": {"relative_size": [0.7, 0.3], "relative_position": [0.2, 1.01], "limitx": [0, 3000], "limity": [1000, 1350], "ticks": 50, "raster": "scan_saved"},
+      "analyses": "trails1.py", 
+      "filter" : {"threshold": 6500, "debug": true},
+      "title": "Trails 1"
+    },
+    {
+      "layers": [
+        [
+          "d.rast", 
+          "map=trails2_dem"
+        ], 
+        [
+          "d.vect", 
+          "map=trails2_contours_10"
+        ],
+        [
+          "d.vect", 
+          "map=trails2_contours_100",
+          "width=3"
+        ],
+        [
+          "d.rast", 
+          "map=trails2_slopedir"
+        ],
+        [
+          "d.vect",
+          "map=trails2_points", "width=4", "size=15", "color=red", "fill_color=red", "icon=basic/circle",
+          "attribute_column=label", "label_size=25", "xref=right", "yref=top"
+        ]
+      ], 
+      "base": "trails2_dem",
+      "time_limit": 600, 
+      "calibration_scanning_params": {"smooth": 8, "numscans": 2, "zexag": 1, "interpolate": true},
+      "scanning_params": {"smooth": 8, "numscans": 3, "zexag": 1, "interpolate": false},
+      "calibrate": true,
+      "profile": {"relative_size": [0.7, 0.3], "relative_position": [0.2, 1.01], "limitx": [0, 4000],
+                  "limity": [1300, 1750], "ticks": 100, "raster": "scan_saved"},
+      "analyses": "trails2.py", 
+      "filter" : {"threshold": 6000, "debug": true},
+      "title": "Trails 2"
+    },
+        {
+      "layers": [
+        [
+          "d.rast", 
+          "map=transfer_dem"
+        ], 
+        [
+          "d.vect", "map=transfer_streams_buffer",
+          "color=none", "fill_color=124:164:255", "width=3"
+        ],
+        [
+          "d.vect", 
+          "map=transfer_contours_5"
+        ],
+        [
+          "d.vect", 
+          "map=transfer_contours_25",
+          "width=3"
+        ],
+        [
+          "d.vect",
+          "map=transfer_streams", "width=4",
+          "color=blue"
+        ],
+        [
+          "d.vect",
+          "map=transfer_road", "width=8",
+          "color=black"
+        ],
+        [
+          "d.vect",
+          "map=transfer_road", "width=4",
+          "color=grey"
+        ],
+        [
+          "d.vect",
+          "map=transfer_drain", "width=5",
+          "color=159:208:255"
+        ],
+        [
+          "d.rast",
+          "map=transfer_slopedir"
+        ],
+        [
+            "d.vect",
+            "map=transfer_intersection", "icon=basic/circle", "size=15", "fill_color=white",
+            "color=black", "width=4"
+        ]
+      ], 
+      "layers_opacity": [1.0, 0.5, 0.5, 0.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+      "base": "transfer_dem",
+      "time_limit": 300,
+      "calibration_scanning_params": {"smooth": 8, "numscans": 2, "zexag": 1, "interpolate": true},
+      "scanning_params": {"smooth": 8, "numscans": 2, "zexag": 1.5, "interpolate": false},
+      "calibrate": true,
+      "display": {"relative_size": [0.1, 0.4], "relative_position": [1.01, 0.1], "fontsize": 12,
+                  "average": 3, "maximum": 100, "formatting_string": "visible road:\n {} %"},
+      "analyses": "transfer.py", 
+      "filter" : {"threshold": 1500, "debug": true},
+      "profile": {"relative_size": [0.7, 0.3], "relative_position": [0.2, 1.01], "limitx": [0, 600],
+                  "limity": [20, 110], "ticks": 20, "raster": "scan_saved"},
+      "title": "Transfer task"
     }
   ]
 }
