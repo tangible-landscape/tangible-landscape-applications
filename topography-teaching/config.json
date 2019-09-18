@@ -75,7 +75,8 @@
       "scanning_params": {"smooth": 8, "numscans": 2, "zexag": 1, "interpolate": false},
       "analyses": "drain.py", 
       "filter" : {"threshold": 75000, "debug": false},
-      "title": "Drain task"
+      "title": "Drain task",
+      "instructions": "Find the highest location from which water naturally pours into desgnated ponds."
     },
     {
       "layers": [
@@ -108,7 +109,8 @@
       "scanning_params": {"smooth": 10, "numscans": 1, "zexag": 3, "interpolate": true},
       "analyses": "flow.py", 
       "filter" : {"threshold": 20000, "debug": true},
-      "title": "Channel task"
+      "title": "Channel task",
+      "instructions": "Reshape the topography to divert all the water from the construction site to the stormwater drain located downhill. Minimize impact."
     },
         {
       "layers": [
@@ -132,7 +134,8 @@
       "analyses": "dams.py", 
       "filter" : {"threshold": 6500, "debug": false},
       "scanning_params": {"smooth": 10, "numscans": 1, "zexag": 1, "interpolate": true},
-      "title": "Dams"
+      "title": "Dams",
+      "instructions": "Use your sand budget to create one or more water dams."
     },
     {
           "layers": [
@@ -160,7 +163,8 @@
       "analyses": "cutfill.py", 
       "display": {"relative_size": [0.1, 0.4], "relative_position": [1.01, 0.1], "fontsize": 18, "average": 2, "maximum": 400, "formatting_string": "{}"},
       "filter" : {"threshold": 800, "debug": true},
-      "title": "Cut and Fill"
+      "title": "Cut and Fill",
+      "instructions": "Add to and remove sand from the area inside the red boundary until the landscape shape matches the elevation information projected on it."
     },
         {
       "layers": [
@@ -187,7 +191,8 @@
       "analyses": "cutfill_colors.py", 
       "scanning_params": {"smooth": 10, "numscans": 2, "zexag": 1, "interpolate": false},
       "filter" : {"threshold": 900, "debug": true},
-      "title": "Cut and Fill with colors"
+      "title": "Cut and Fill with colors",
+      "instructions": "Match the landscape shape and the projected contour lines by adding sand to the areas highlighted in blue and removing sand from areas highlighted in red."
     },
         {
       "layers": [
@@ -223,7 +228,8 @@
       "profile": {"relative_size": [0.7, 0.3], "relative_position": [0.2, 1.01], "limitx": [0, 3000], "limity": [1000, 1350], "ticks": 50, "raster": "scan_saved"},
       "analyses": "trails1.py", 
       "filter" : {"threshold": 6500, "debug": true},
-      "title": "Trails 1"
+      "title": "Trails 1",
+      "instructions": "Use wooden markers to draw a route that connects the trailhead (A) to the destination (B) with the lowest slope possible along the trail."
     },
     {
       "layers": [
@@ -259,7 +265,8 @@
                   "limity": [1300, 1750], "ticks": 100, "raster": "scan_saved"},
       "analyses": "trails2.py", 
       "filter" : {"threshold": 6000, "debug": true},
-      "title": "Trails 2"
+      "title": "Trails 2",
+      "instructions": "Use wooden markers to draw a route that connects the trailhead (A) to the destination (B) with the lowest slope possible along the trail."
     },
         {
       "layers": [
@@ -322,7 +329,8 @@
       "filter" : {"threshold": 1500, "debug": true},
       "profile": {"relative_size": [0.7, 0.3], "relative_position": [0.2, 1.01], "limitx": [0, 600],
                   "limity": [20, 110], "ticks": 20, "raster": "scan_saved"},
-      "title": "Transfer task"
+      "title": "Transfer task",
+      "instructions": "Find a suitable location for a research center's building. Avoid connector road with high slopes and minimize the visibility of main road from the building. Must drain into highlighted stream but should avoid its buffer."
     }
   ]
 }
