@@ -1,0 +1,26 @@
+{
+	"tasks": [{
+		"layers": [
+			[
+				"d.rast",
+				"map=OSM_stamen"
+			],
+			[
+				"d.vect", "map=drain", "color=red",
+				"width=3"
+			]
+		],
+		"layers_opacity": [0.5, 1.0],
+		"base": "OSM_stamen",
+		"calibrate": true,
+		"scanning_params": {
+			"smooth": 8,
+			"numscans": 2,
+			"zexag": 1,
+			"interpolate": false
+		},
+		"analyses": "OSM.py",
+		"title": "Emergency routing with OSM",
+		"instructions": "Before each use, calibrate: Remove all objects from the model and smooth the sand, then press Calibrate. Then start the activity. Place the dark red felt pieces on the model. These are two points of interest, e.g. school and hospital. The algorithm finds shortest route using the projected OpenStreetMap data. Now use wooden blocks or sand to block the road. (This activity is not using the topography.)"
+	}]
+}
