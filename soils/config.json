@@ -1,0 +1,46 @@
+{
+  "tasks": [
+      {
+      "layers": [
+        [
+          "d.rast",
+          "map=cross"
+        ],
+        [
+          "d.vect",
+          "map=contours_scanned"
+        ],
+        [
+          "d.vect",
+          "map=contours_scanned", "width=2"
+        ]
+      ],
+      "base_region": "box",
+      "scanning_params": {"smooth": 8, "numscans": 2, "interpolate": true, "zexag": 0.26},
+      "analyses": "digging.py",
+      "title": "Soil moisture excavation"
+    },
+      {
+      "layers": [
+        [
+          "d.rast",
+          "map=cross"
+        ],
+        [
+          "d.vect",
+          "map=slice_line"
+        ],
+        [
+          "d.vect",
+          "map=contours_scanned", "width=2"
+        ]
+      ],
+      "base_region": "box",
+      "scanning_params": {"smooth": 8, "numscans": 2, "interpolate": false, "zexag": 0.26},
+      "calibration_scanning_params": {"smooth": 8, "numscans": 2, "interpolate": false, "zexag": 0.26},
+      "calibrate": true,
+      "analyses": "profiles.py",
+      "title": "Soil moisture slice"
+    }
+  ]
+}
