@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-@brief experiment_cutfill2
+@brief detect felt
 
 This program is free software under the GNU General Public License
 (>=v2). Read the file COPYING that comes with GRASS for details.
@@ -11,17 +11,22 @@ This program is free software under the GNU General Public License
 import os
 import numpy as np
 from datetime import datetime
-from analyses import get_environment
+from tangible_utils import get_environment
 import grass.script as gscript
 from grass.exceptions import CalledModuleError
-import time
+import analyses
 from pops_gui import updateDisplay
 
 
 
-def run_felt(scanned_elev, scanned_color, pops, eventHandler, env, **kwargs):
+def run_felt(real_elev, scanned_elev, scanned_color, eventHandler, env, **kwargs):
+    print('aaaa')
+    
+    
+    compute_zoomed_region(real_elev, scanned_elev, kwargs['zoom_name'], env=env)
+    
 ##############################
-    color_threshold = 50
+    color_threshold = 90
 ###############################
     size_threshold = 10
     superpixels = 'superpixels'
@@ -84,6 +89,7 @@ def run_felt(scanned_elev, scanned_color, pops, eventHandler, env, **kwargs):
     gscript.run_command('g.copy', raster=[treatments, treatments_old], env=env)
             
     # price
+    pops = kwargs['pops']
     gscript.mapcalc("{n} = if ({host} > 0, {t}, null())".format(host=pops['model']['host'], t=treatments, n=treatments + '_exclude_host_tmp'), env=env)
     univar = gscript.parse_command('r.univar', map=treatments + '_exclude_host_tmp', flags='g', env=env)
     if univar and 'n' in univar:
@@ -96,3 +102,86 @@ def run_felt(scanned_elev, scanned_color, pops, eventHandler, env, **kwargs):
     event = updateDisplay(area=area)
     eventHandler.postEvent(receiver=eventHandler.pops_panel, event=event)
 
+
+def adjust_coordinates(points, real_elev):
+    info = gscript.raster_info(real_elev)
+    orig_width =  info['east'] - info['west'] 
+    orig_height = info['north'] - info['south']
+    orig_ratio = orig_width / orig_height
+    
+    width = abs(points[0][0] - points[1][0])
+    height = abs(points[0][1] - points[1][1])
+    ratio = width / height
+
+    minx = min(points[0][0], points[1][0])
+    miny = min(points[0][1], points[1][1])
+    
+    if orig_ratio > ratio:
+        new_height = height
+        new_width = new_height * orig_ratio
+        minx = minx - (new_width - width) / 2
+    else:
+        new_width = width
+        new_height = new_width / orig_ratio
+        miny = miny - (new_height - height) / 2
+
+    maxx = minx + new_width
+    maxy = miny + new_height
+    return ((minx, miny), (maxx, maxy))
+
+
+def get_points(vector):
+    points_raw = gscript.read_command('v.out.ascii', input=vector,
+                                      type='point', format='point').strip().split()
+    points = []
+    for p in points_raw:
+        x, y, cat = p.split('|')
+        points.append((float(x), float(y)))
+    return points
+
+def compare_points(new, old, real_elev, env):
+    res = gscript.read_command('v.distance', flags='p', from_=new, from_type='point',
+                               to=old, to_type='point', upload='dist', separator='comma', env=env).strip()
+    print(res)
+    res = res.splitlines()[1:]
+    total = 0
+    for line in res:
+        cat, dist = line.split(',')
+        total += float(dist)
+    
+    info = gscript.raster_info(real_elev)
+    width =  info['east'] - info['west'] 
+    print('compare')
+    print(total / width)
+    if total / width > 0.1:
+        return False
+    return True
+    
+
+def compute_zoomed_region(real_elev, scanned_elev, zoom_name, env):
+    if not zoom_name:
+        return
+
+    new_change = 'new_change'
+    old_change = 'old_change'
+    analyses.change_detection(before='scan_saved', after=scanned_elev,
+                              change=new_change, height_threshold=[10000, 30000], cells_threshold=[5, 100],
+                              add=True, max_detected=5, debug=True, env=env)
+    new_points = get_points(new_change)
+    if len(new_points) == 2:
+        try:
+            if compare_points(new_change, old_change, real_elev, env):
+                minp, maxp = adjust_coordinates(new_points, real_elev)
+                gscript.run_command('g.region', flags='u', n=maxp[1], s=minp[1], e=maxp[0], w=minp[0],
+                                    save=zoom_name, env=env)
+                gscript.run_command('g.remove', type='vector', flags='f', name=old_change, env=env)
+            else:
+                gscript.run_command('g.copy', vector=[new_change, old_change], env=env)
+        except CalledModuleError as e:
+            print(e)
+            gscript.run_command('g.copy', vector=[new_change, old_change], env=env)
+            #gscript.run_command('v.edit', map=tmp_adjusted, tool='create', env=env)
+            
+    else:
+        pass
+        #gscript.run_command('v.edit', map=tmp_adjusted, tool='create', env=env)
