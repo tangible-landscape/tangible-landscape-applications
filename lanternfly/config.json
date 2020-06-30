@@ -4,22 +4,13 @@
 		"345": "simulate",
 		"367": "stepforward",
 		"366": "stepback",
-		"344": "reset",
-		"27": "reset"
+		"347": "defaultzoom"
 	},
 	"tasks": [{
 		"layers": [
 			[
 				"d.rast",
-				"map=dem"
-			],
-			[
-				"d.vect",
-				"map=slf_county_boundaries_carto", "color=84:84:84", "fill_color=none", "width=1"
-			],
-			[
-				"d.vect",
-				"map=slf_state_boundaries_carto", "color=74:74:74", "fill_color=none", "width=2"
+				"map=tree_of_heaven"
 			],
 			[
 				"d.rast",
@@ -27,96 +18,108 @@
 			],
 			[
 				"d.vect",
-				"map=aphis_treatment_area", "color=none", "fill_color=168:121:34"
+				"map=aphis_treatment_area", "color=none", "fill_color=yellow"
+			],
+			[
+				"d.vect",
+				"map=slf_county_boundaries", "color=50:50:50", "fill_color=none", "width=1"
+			],
+			[
+				"d.vect",
+				"map=slf_state_boundaries", "color=50:50:50", "fill_color=none", "width=2"
 			]
 		],
-		"layers_opacity": [1, 0.5, 1, 1, 0.3],
+		"layers_opacity": [0.5, 1, 0.2, 1, 1],
 		"base": "tree_of_heaven",
 		"scanning_params": {
 			"smooth": 5,
-			"numscans": 1,
+			"numscans": 2,
 			"zexag": 1,
 			"resolution": 5,
 			"interpolate": false
 		},
 		"analyses": "detect.py",
 		"filter": {
-			"threshold": 1900000000,
+			"threshold": 90000,
 			"debug": true
 		},
 		"display": {
 			"multiple": true,
 			"average": 2,
-			"relative_size": [0.25, 0.08],
-			"relative_position": [1.01, 0.05],
-			"fontsize": 12,
-			"maximum": [7413, 30],
-			"formatting_string": ["{:.1f} ac", "${:.1f}M"],
-			"title": ["Area", "Price"],
+			"relative_size": [0.45, 0.1],
+			"relative_position": [0.25, 1.2],
+			"fontsize": 30,
+			"maximum": [1000, 1000, 1000, 1000],
+			"formatting_string": ["{:.1f} ac", "{:.1f} ac", "${:.1f}K", "${:.1f}K"],
+			"title": ["Area", "Total area", "Price", "Total price"],
 			"vertical": true
 		},
-		"time_status_display": {
-			"relative_size": [0.18, 0.15],
-			"relative_position": [0.82, 0.82],
-			"fontsize": 50,
-			"beginning_of_year": false
+		"time_display": {
+			"relative_size": [0.6, 0.08],
+			"relative_position": [0.2, 1],
+			"fontsize": 40
 		},
 		"title": "PoPS"
 	}],
 	"POPS": {
+                "baseline":{
+                        "probability_series": "baseline",
+                        "runs": 10,
+                        "flags": "s"
+                },
 		"model": {
 			"model_name": "r.pops.spread",
-			"output_series": "output",
+			"single_series": "output",
+			"average_series": "average",
 			"host": "tree_of_heaven",
 			"probability_series": "probability",
 			"total_plants": "total_hosts",
-			"start_time": 2019,
-			"end_time": 2021,
-			"reproductive_rate": 2,
+			"start_date": "2019-01-01",
+			"end_date": "2021-12-31",
+			"reproductive_rate": 2.1,
 			"seasonality": "6,11",
-			"wind": "NONE",
-			"kappa": 0,
-			"short_distance_scale": 59,
-			"infected": "initial_infections_2018_single_count_pm",
-			"step": "month",
-			"runs": 10,
-			"flags": "",
-			"random_seed": 42,
+                        "treatment_length": 0,
 			"treatment_application": "ratio_to_all",
+			"natural_direction": "none",
+			"natural_direction_strength": 0,
+			"natural_distance": 47,
+			"natural_dispersal_kernel": "cauchy",
+			"infected": "initial_infections_2018_single_count_pm",
+			"step_unit": "month",
+                        "output_frequency": "yearly",
+			"runs": 10,
+			"flags": "s",
 			"moisture_coefficient_file": "coefficient_1.txt",
-			"temperature_coefficient_file": {
-				"GOOD": "high_temp_coeff_2018_2022.txt",
-				"AVERAGE": "avg_temp_coeff_2018_2022.txt",
-				"BAD": "low_temp_coeff_2018_2022.txt"
-			},
-
+			"temperature_coefficient_file": "avg_temp_coeff_2018_2022.txt",
 			"lethal_temperature": -12.87,
-			"temperature_file": {
-				"GOOD": "high_crit_temp_2018_2022.txt",
-				"AVERAGE": "avg_crit_temp_2018_2022.txt",
-				"BAD": "low_crit_temp_2018_2022.txt"
-			}
-		},
-		"dashboard": {
-			"session": 26,
-			"url": "https://popsmodel.org/api/"
+			"lethal_month": 1,
+			"temperature_file": "avg_crit_temp_2018_2022.txt"
 		},
 		"steering": {
 			"server": "server.py",
 			"url": "http://localhost",
-			"port_simulation": null,
-			"port_interface": 8888
+			"port_simulation": 8889,
+			"port_interface": 8898,
+                        "move_current_year": false
 		},
                 "weather": "AVERAGE",
 		"treatments": "treatments",
+                "treatment_date": "2019-07-01",
 		"efficacy": 100,
-        "unit": "acre",
-        "cost_unit": 1e6,
-		"color_trees": "color_table_infection_fire.txt",
-		"color_probability": "color_table_probability_fire.txt",
+                "unit": "acre",
+		"color_trees": "color_table_dead_trees2.txt",
+		"color_probability": "color_probability3.txt",
 		"color_treatments": "grey",
 		"cost_per_meter_squared": 1,
+		"cost_unit": 1e3,
+		"results_opacity": 0.9,
 		"animation_speed": 1500,
-		"waitBeforeRun": 3000
+		"waitBeforeRun": 3000,
+		"treatments_vstyle": {
+			"label_size": 16,
+			"label_color": "#FFFFFF",
+			"font": "n019044l",
+			"width": 3
+		}
 	}
 }
