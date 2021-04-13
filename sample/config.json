@@ -18,6 +18,7 @@
       "base": "dem",
       "scanning_params": {"smooth": 10, "numscans": 1, "interpolate": true},
       "analyses": "contours.py",
+      "instructions": "Computes contours with contour interval depending on scanned elevation range.",
       "title": "Contours"
     },
       {
@@ -32,8 +33,9 @@
         ]
       ],
       "base": "dem",
-      "scanning_params": {"smooth": 10, "numscans": 1, "interpolate": true},
+      "scanning_params": {"smooth": 8, "numscans": 1, "interpolate": true},
       "analyses": "slope.py",
+      "instructions": "Computes slope in degrees.",
       "title": "Slope"
     },
       {
@@ -48,8 +50,9 @@
         ]
       ],
       "base": "dem",
-      "scanning_params": {"smooth": 10, "numscans": 1, "interpolate": true},
+      "scanning_params": {"smooth": 8, "numscans": 1, "interpolate": true},
       "analyses": "aspect.py",
+      "instructions": "Computes aspect in degrees.",
       "title": "Aspect"
     },
       {
@@ -61,11 +64,17 @@
         [
           "d.vect",
           "map=contours"
+        ],
+        [
+          "d.vect", "map=peaks",
+          "color=0:0:0:255", "fill_color=229:229:229", "width=1",
+          "icon=basic/triangle", "size=20"
         ]
       ],
       "base": "dem",
-      "scanning_params": {"smooth": 10, "numscans": 1, "interpolate": true},
+      "scanning_params": {"smooth": 8, "numscans": 1, "interpolate": true},
       "analyses": "geomorphons.py",
+      "instructions": "Computes landforms and derives peaks.",
       "title": "Land forms"
     },
       {
@@ -80,8 +89,9 @@
         ]
       ],
       "base": "dem",
-      "scanning_params": {"smooth": 10, "numscans": 1, "interpolate": true},
+      "scanning_params": {"smooth": 10, "numscans": 2, "interpolate": false},
       "analyses": "cutfill.py",
+      "instructions": "Computes difference from base raster, red is too high, blue is too low.",
       "title": "Cut and fill"
     },
       {
@@ -103,6 +113,7 @@
       "layers_opacity": [1.0, 1.0, 0.5],
       "scanning_params": {"smooth": 10, "numscans": 1, "interpolate": true},
       "analyses": "water.py",
+      "instructions": "Computes waterflow and ponding.",
       "title": "Topo and water"
     },
     {
@@ -127,7 +138,8 @@
       "analyses": "trails.py",
       "profile": {"relative_size": [0.7, 0.4], "relative_position": [0.2, 1.05], "limitx": [0, 1500],
                   "limity": [100, 200], "ticks": 20, "raster": "scan_saved"},
-      "title": "Trails"
+      "instructions": "Computes least cost path based on walking energy between detected markers and computes slope along the trails.",
+      "title": "Trail"
     }
   ]
 }

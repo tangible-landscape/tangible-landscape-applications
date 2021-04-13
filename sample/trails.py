@@ -1,5 +1,5 @@
 from math import sqrt
-import grass.script as gscript
+import grass.script as gs
 from activities import updateProfile
 from TSP import solve_tsp_numpy
 from tangible_utils import get_environment
@@ -14,51 +14,73 @@ def dist(points, i, j):
 
 
 def create_end_points(env):
-    info = gscript.raster_info('scan')
-    y1 = info['south'] + 2 * (info['north'] - info['south']) / 10.
-    y2 = info['south'] + 8 * (info['north'] - info['south']) / 10.
-    x1 = info['west'] + 2 * (info['east'] - info['west']) / 10.
-    x2 = info['west'] + 8 * (info['east'] - info['west']) / 10.
-    gscript.write_command('v.in.ascii', input='-', stdin='{x1}|{y1}\n{x2}|{y2}'.format(x1=x1, x2=x2, y1=y1, y2=y2),
-                         output='trail_points', env=env)
+    info = gs.raster_info("scan")
+    y1 = info["south"] + 2 * (info["north"] - info["south"]) / 10.0
+    y2 = info["south"] + 8 * (info["north"] - info["south"]) / 10.0
+    x1 = info["west"] + 2 * (info["east"] - info["west"]) / 10.0
+    x2 = info["west"] + 8 * (info["east"] - info["west"]) / 10.0
+    gs.write_command(
+        "v.in.ascii",
+        input="-",
+        stdin="{x1}|{y1}\n{x2}|{y2}".format(x1=x1, x2=x2, y1=y1, y2=y2),
+        output="trail_points",
+        env=env,
+    )
     return ((x1, y1), (x2, y2))
 
 
 def run_trails(real_elev, scanned_elev, blender_path, eventHandler, env, **kwargs):
-    resulting = 'trail'
-    trail = 'trail'
-    before = 'scan_saved'
+    resulting = "trail"
+    trail = "trail"
+    before = "scan_saved"
     # trim the edges to avoid noise being detected as markers
-    info = gscript.raster_info('scan')
-    edge = (info['north'] - info['south']) / 20
-    env2 = get_environment(raster=scanned_elev, n='n-{}'.format(edge), s='s+{}'.format(edge), e='e-{}'.format(edge), w='w+{}'.format(edge))
-    analyses.change_detection(before=before, after=scanned_elev,
-                              change='change', height_threshold=[5, 30], cells_threshold=[5, 100],
-                              add=True, max_detected=10, debug=True, env=env2)
+    info = gs.raster_info("scan")
+    edge = (info["north"] - info["south"]) / 20
+    env2 = get_environment(
+        raster=scanned_elev,
+        n="n-{}".format(edge),
+        s="s+{}".format(edge),
+        e="e-{}".format(edge),
+        w="w+{}".format(edge),
+    )
+    analyses.change_detection(
+        before=before,
+        after=scanned_elev,
+        change="change",
+        height_threshold=[5, 30],
+        cells_threshold=[5, 100],
+        add=True,
+        max_detected=5,
+        debug=True,
+        env=env2,
+    )
     points = {}
     # if we have 'trail_points' vector, use this:
-    #data = gscript.read_command('v.out.ascii', input='trail_points', type='point', format='point', env=env).strip()
-    #c1, c2 = data.splitlines()
-    #c1 = c1.split('|')
-    #c2 = c2.split('|')
-    #points[0] = (float(c1[0]), float(c1[1]))
-    #points[1] = (float(c2[0]), float(c2[1]))
+    # data = gs.read_command('v.out.ascii', input='trail_points', type='point', format='point', env=env).strip()
+    # c1, c2 = data.splitlines()
+    # c1 = c1.split('|')
+    # c2 = c2.split('|')
+    # points[0] = (float(c1[0]), float(c1[1]))
+    # points[1] = (float(c2[0]), float(c2[1]))
     # otherwise we will generate them on the fly:
     points[0], points[1] = create_end_points(env)
 
-    gscript.run_command('v.edit', tool='create', map=trail, env=env)
+    gs.run_command("v.edit", tool="create", map=trail, env=env)
     # detected points
-    points_raw = gscript.read_command('v.out.ascii', input='change',
-                                      type='point', format='point').strip().split()
+    points_raw = (
+        gs.read_command("v.out.ascii", input="change", type="point", format="point")
+        .strip()
+        .split()
+    )
     i = 2
     for point in points_raw:
-        point = point.split('|')
+        point = point.split("|")
         point = (float(point[0]), float(point[1]))
         points[i] = point
         i += 1
     length = len(points)
     if length == 2:
-        gscript.mapcalc("{} = null()".format(resulting), env=env)
+        gs.mapcalc("{} = null()".format(resulting), env=env)
         event = updateProfile(points=[])
         eventHandler.postEvent(receiver=eventHandler.activities_panel, event=event)
         return
@@ -84,44 +106,69 @@ def run_trails(real_elev, scanned_elev, blender_path, eventHandler, env, **kwarg
     if ind2 > ind1:
         solution = solution[::-1]
     ind = solution.index(0)
-    solution = solution[ind :] + solution[:ind ]
+    solution = solution[ind:] + solution[:ind]
     profile_points = []
     for i in solution:
         profile_points.append(points[i])
 
     # friction
-    friction = 'friction'
-    gscript.mapcalc('{} = 0'.format(friction), env=env)
-    tmp_dir = 'tmp_dir'
-    tmp_cost = 'tmp_cost'
-    tmp_drain = 'tmp_drain'
-    
-    gscript.run_command('v.edit', tool='create', map=trail, env=env)
-    for i in range(len(solution) - 1):
-        gscript.run_command('r.walk', elevation=before, friction=friction, output=tmp_cost, outdir=tmp_dir,
-                            start_coordinates=points[solution[i]], stop_coordinates=points[solution[i+1]], flags='k',
-                            env=env)
-        gscript.run_command('r.drain', input=tmp_cost, direction=tmp_dir, output=tmp_drain,
-                            drain=tmp_drain, start_coordinates=points[solution[i+1]], flags='d', env=env)
-        gscript.run_command('v.patch', input=tmp_drain, output=trail, flags='a', env=env)
+    friction = "friction"
+    gs.mapcalc("{} = 0".format(friction), env=env)
+    tmp_dir = "tmp_dir"
+    tmp_cost = "tmp_cost"
+    tmp_drain = "tmp_drain"
 
+    gs.run_command("v.edit", tool="create", map=trail, env=env)
+    for i in range(len(solution) - 1):
+        gs.run_command(
+            "r.walk",
+            elevation=before,
+            friction=friction,
+            output=tmp_cost,
+            outdir=tmp_dir,
+            start_coordinates=points[solution[i]],
+            stop_coordinates=points[solution[i + 1]],
+            flags="k",
+            env=env,
+        )
+        gs.run_command(
+            "r.drain",
+            input=tmp_cost,
+            direction=tmp_dir,
+            output=tmp_drain,
+            drain=tmp_drain,
+            start_coordinates=points[solution[i + 1]],
+            flags="d",
+            env=env,
+        )
+        gs.run_command("v.patch", input=tmp_drain, output=trail, flags="a", env=env)
 
     env2 = get_environment(raster=before)
     # slope along line
-    gscript.run_command('v.to.rast', input=trail, type='line', output='trail_dir', use='dir', env=env2)
-    gscript.run_command('r.slope.aspect', elevation=before, slope='saved_slope', aspect='saved_aspect', env=env2)
-    gscript.mapcalc("slope_dir = abs(atan(tan({slope}) * cos({aspect} - {trail_dir})))".format(slope='saved_slope', aspect='saved_aspect',
-                    trail_dir='trail_dir'), env=env2)
+    gs.run_command(
+        "v.to.rast", input=trail, type="line", output="trail_dir", use="dir", env=env2
+    )
+    gs.run_command(
+        "r.slope.aspect",
+        elevation=before,
+        slope="saved_slope",
+        aspect="saved_aspect",
+        env=env2,
+    )
+    gs.mapcalc(
+        "slope_dir = abs(atan(tan({slope}) * cos({aspect} - {trail_dir})))".format(
+            slope="saved_slope", aspect="saved_aspect", trail_dir="trail_dir"
+        ),
+        env=env2,
+    )
     # set new color table
-    colors = ['0 green', '5 green', '5 yellow', '10 yellow', '10 red', '90 red']
-    gscript.write_command('r.colors', map='slope_dir', rules='-', stdin='\n'.join(colors), env=env2)
+    colors = ["0 green", "5 green", "5 yellow", "10 yellow", "10 red", "90 red"]
+    gs.write_command(
+        "r.colors", map="slope_dir", rules="-", stdin="\n".join(colors), env=env2
+    )
     # increase thickness
-    gscript.run_command('r.grow', input='slope_dir', radius=1.1, output=resulting, env=env2)
-    
+    gs.run_command("r.grow", input="slope_dir", radius=1.1, output=resulting, env=env2)
 
     # update profile
-    print(profile_points)
     event = updateProfile(points=profile_points)
     eventHandler.postEvent(receiver=eventHandler.activities_panel, event=event)
-    
-
