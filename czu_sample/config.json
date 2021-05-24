@@ -90,7 +90,7 @@
         ]
       ],
       "base": "dem",
-      "scanning_params": {"smooth": 9, "numscans": 1, "zexag": 2, "interpolate": true},
+      "scanning_params": {"smooth": 12, "numscans": 1, "zexag": 2, "interpolate": true},
       "analyses": "cutfill.py",
       "instructions": "Computes difference from base raster, red is too high, blue is too low. Lowest point on the model is matched to the lowest point of the digital dem.",
       "title": "Cut and fill"
@@ -112,7 +112,7 @@
       ],
       "base": "dem",
       "layers_opacity": [1.0, 1.0, 0.5],
-      "scanning_params": {"smooth": 10, "numscans": 1, "zexag": 1, "interpolate": true},
+      "scanning_params": {"smooth": 12, "numscans": 1, "zexag": 1, "interpolate": true},
       "analyses": "water.py",
       "instructions": "Computes waterflow and ponding.",
       "title": "Topo and water"
