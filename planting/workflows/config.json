@@ -1,6 +1,5 @@
 {
-  "taskDir": "/home/tangible/analyses/acadia",
-  "keyboard_events": {"stopTask": 370, "scanOnce": 344},
+  "keyboard_events": {"stopTask": 370, "scanOnce": 344, "taskNext": 367, "taskPrevious": 366},
   "tasks": [
       {
       "layers": [
@@ -19,14 +18,11 @@
       ],
       "base": "transfer_dem",
       "layers_opacity": [1.0, 1.0, 0.5],
-      "scanning_params": {"smooth": 10, "numscans": 1, "zexag": 1.5},
+      "scanning_params": {"smooth": 10, "numscans": 1, "zexag": 1.5, "interpolate": true},
       "analyses": "topography.py",
-      "filter" : {"threshold": 150, "debug": true},
-      "display": {"multiple": true, "average": 2, "size": [250, 200], "position": [3400, 620],
-                  "fontsize": 14, "maximum": [10, 80],
-                  "formatting_string": ["{:.1f} ha", "{:g} m"],
-                  "title": ["Area", "Depth"]},
-      "title": "Topo and water"
+      "filter" : {"threshold": 1500, "debug": true},
+      "instructions": "Change topography and observe new terrain contours, waterflow accumulation, lakes, and dams. The topograhy and lakes are visible in 3D in Blender.",
+      "title": "Topo and water (with Blender)"
     },
     {
       "layers": [
@@ -48,11 +44,10 @@
       "calibrate": false,
       "scanning_params": {"smooth": 8, "numscans": 1, "zexag": 1.5},
       "analyses": "topography_views.py",
-      "filter" : {"threshold": 150, "debug": true},
       "title": "Topography views"
     },
     {
-      "title": "Plants",
+     "title": "Planting trees (with Blender)",
       "layers": [
          [
           "d.rast",
@@ -62,11 +57,12 @@
       "layers_opacity": [0.1],
       "base": "transfer_dem",
       "calibrate": false,
-      "scanning_params": {"smooth": 7, "numscans": 3, "zexag": 1.5},
+      "scanning_params": {"smooth": 7, "numscans": 3, "zexag": 1.5, "interpolate": false},
       "analyses": "patches.py", 
       "filter" : {"threshold": 150, "debug": true},
       "single_scan": true,
-      "display": {"multiple": true, "average": 2, "size": [600, 180], "position": [2800, 900],
+      "display": {"relative_position": [0, 1.08], "relative_size": [0.75, 0.21],
+                  "multiple": true, "average": 2,
                   "fontsize": 12, "maximum": [100, 20, 6, 60, 2.5, 8],
                   "formatting_string": ["{:.0f} %", "{:g}", "{:g}","{:.1f}","{:.2f}","{:.1f}"],
                   "title": ["Remediated", "Patch #", "Richness", "Mean size", "Shannon", "Shape ind." ]}
@@ -78,13 +74,14 @@
           "map=waterall"
         ]
       ],
-      "layers_opacity": [0.3],
+      "layers_opacity": [0.2],
       "base": "transfer_dem",
       "calibrate": true,
-      "scanning_params": {"smooth": 8, "numscans": 1, "zexag": 1.5},
+      "scanning_params": {"smooth": 8, "numscans": 1, "zexag": 1.5, "interpolate": false},
       "analyses": "planting_views.py",
       "filter" : {"threshold": 150, "debug": true},
-      "title": "Plants views"
+      "title": "Planting views (with Blender)",
+      "instructions": "Use the directional marker to set place and direction of the camera in the 3D view. The camera is looking in the direction of the red part of the marker. Any the felt can stay at the surface and serves as a map. It is necessary to calibrate. The change is visible in Blender."
     },
     {
       "layers": [
@@ -107,12 +104,14 @@
       "base": "transfer_dem",
       "layers_opacity": [0.3, 0.5, 1.0, 1.0],
       "calibrate": true,
-      "scanning_params": {"smooth": 7, "numscans": 2, "zexag": 1.5},
+      "scanning_params": {"smooth": 7, "numscans": 2, "zexag": 1.5, "interpolate": false},
+      "calibration_scanning_params": {"interpolate": true},
       "analyses": "trails.py",
       "filter" : {"threshold": 150, "debug": false},
-      "profile": {"size": [650, 160], "position": [2850, 900], "limitx": [0, 2000],
-                  "limity": [10, 110], "ticks": 20, "raster": "scan_saved"},
-      "title": "Trails"
+      "profile": {"relative_position": [0, 1.01], "relative_size": [0.7, 0.2],
+                  "limitx": [0, 2000], "limity": [10, 110], "ticks": 20, "raster": "scan_saved"},
+      "title": "Trail design (with Blender)",
+      "instructions": "First calibrate, then start the activity. Place markers somewhere in between the projected points A and B. Place the markers so that the trail has desired steepness. Green is mild slope, yellow is moderate slope and red very steep slope. The alorithm uses heuristic to determine order of the waypoints and then shortest cost path in between the waypoints where cost is based on the distance and slope."
     },
     {
       "layers": [
@@ -129,7 +128,6 @@
       "calibrate": true,
       "scanning_params": {"smooth": 8, "numscans": 1, "zexag": 1.5},
       "analyses": "planting_views.py",
-      "filter" : {"threshold": 150, "debug": true},
       "title": "Trail views"
     }
   ]

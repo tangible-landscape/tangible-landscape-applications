@@ -73,7 +73,7 @@ def run_water(scanned_elev, blender_path, env, eventHandler, **kwargs):
         avg_depth = float(univar['mean'])
         # update dashboard
         event = updateDisplay(value=[area/10000., avg_depth])
-        eventHandler.postEvent(receiver=eventHandler.activities_panel, event=event)
+    eventHandler.postEvent(receiver=eventHandler.activities_panel, event=event)
     
     gscript.mapcalc('water = if(!isnull(ponds_export2), ponds, null())', env=env)
     gscript.write_command('r.colors', map='water', rules='-',

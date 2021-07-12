@@ -43,9 +43,9 @@ def run_view(scanned_elev, blender_path, env, **kwargs):
                 old_points.append((x, y, z))
             except ValueError:
                 continue
-            except IndexError, e:
-                print line
-                print e
+            except IndexError as e:
+                print (line)
+                print (e)
                 continue
     
     reg_params = gscript.parse_command('r.regression.line', flags='g', mapx=before, mapy=scanned_elev, env=env)
@@ -69,6 +69,6 @@ def run_view(scanned_elev, blender_path, env, **kwargs):
 
         # compare old and new
         if not old_points or (dist(old_points[0], new_points[0]) > dist_threshold or dist(old_points[1], new_points[1]) > dist_threshold):
-            print 'write'
+            print ('write')
             gscript.write_command('v.in.ascii', stdin=linetext, input='-', output=arrow_final, format='standard', flags='zn', env=env)
             blender_export_vector(vector=arrow_final, name='vantage', z=True, vtype='line', path=blender_path, time_suffix=False, env=env)
