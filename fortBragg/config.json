@@ -1,0 +1,121 @@
+{
+  "tasks": [
+    {
+      "layers": [
+        [
+          "d.rast", 
+          "map=depth"
+        ],
+        [
+          "d.rast", 
+          "map=ponds"
+        ],
+        [
+          "d.vect", 
+          "map=contours"
+        ]
+      ], 
+      "base": "dem",
+      "scanning_params": {"smooth": 8, "numscans": 2, "zexag": 2, "interpolate": false},
+      "analyses": "water.py",
+      "calibrate": false,
+      "filter": {"threshold": 1200, "debug": true},
+      "title": "Water flow"
+    },
+    {
+      "layers": [
+        [
+          "d.rast",
+          "map=geomorphon"
+        ],
+        [
+          "d.vect",
+          "map=contours"
+        ],
+        [
+          "d.vect", "map=peaks",
+          "color=0:0:0:255", "fill_color=229:229:229", "width=1",
+          "icon=basic/triangle", "size=20"
+        ]
+      ],
+      "base": "dem",
+      "scanning_params": {"smooth": 12, "numscans": 1, "zexag": 1, "interpolate": true},
+      "analyses": "geomorphons.py",
+      "filter": {"threshold": 120000, "debug": false},
+      "instructions": "Computes landforms and derives peaks.",
+      "title": "Land forms"
+    },
+    {
+      "layers": [
+        [
+          "d.rast", 
+          "map=usped"
+        ],
+        [
+          "d.vect", 
+          "map=contours"
+        ]
+      ], 
+      "base": "dem",
+      "scanning_params": {"smooth": 10, "numscans": 2, "zexag": 2, "interpolate": false},
+      "analyses": "erdep.py",
+      "calibrate": true,
+      "filter": {"threshold": 1200, "debug": true},
+      "title": "Erosion deposition (USPED)"
+    },
+    {
+      "layers": [
+        [
+          "d.rast", 
+          "map=scan"
+        ],
+        [
+          "d.rast", 
+          "map=basin"
+        ],
+        [
+          "d.vect", 
+          "map=drain", "color=blue", "width=5"
+        ],
+        [
+          "d.vect", 
+          "map=contours"
+        ]
+      ], 
+      "base": "dem",
+      "layers_opacity": [1, 0.5, 1, 1],
+      "scanning_params": {"smooth": 10, "numscans": 1, "zexag": 1, "interpolate": true},
+      "analyses": "watersheds.py",
+      "calibrate": true,
+      "filter": {"threshold": 2500, "debug": true},
+      "title": "Drain"
+    },
+    {
+      "layers": [
+        [
+          "d.vect",
+          "map=contours"
+        ],
+        [
+          "d.rast", "map=trail"
+        ],
+        [
+          "d.vect", "map=trail_points", "color=red", "fill_color=red",
+          "icon=basic/circle", "size=15"
+        ]
+      ],
+      "base": "dem",
+      "layers_opacity": [0.8, 1, 1],
+      "calibrate": true,
+      "filter": {"threshold": 1400, "debug": true},
+      "scanning_params": {"smooth": 7, "numscans": 1, "zexag": 2, "interpolate": true},
+      "calibration_scanning_params": {"smooth": 7, "numscans": 1, "zexag": 2, "interpolate": true},
+      "profile": {"relative_size": [0.4, 0.3], "relative_position": [-0.4, 0.5], "limitx": [0, 15000],
+        "limity": [0, 2000], "ticks": 200, "raster": "scan_saved"},
+      "analyses": "trails.py",
+      "instructions": "Computes least cost path based on walking energy between detected markers and computes slope along the trails.",
+      "title": "Trail"
+    }
+  ]
+}
+
