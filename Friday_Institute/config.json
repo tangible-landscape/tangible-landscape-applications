@@ -1,0 +1,284 @@
+{
+  "tasks": [
+    {
+      "layers": [
+        [
+          "d.rast",
+          "map=scan"
+        ],
+        [
+          "d.vect",
+          "map=freeplay_line",
+          "color=white",
+          "width=5"
+        ],
+        [
+          "d.vect",
+          "map=contours",
+          "width=2"
+        ],
+        [
+          "d.vect",
+          "map=freeplay_points",
+          "color=white",
+          "fill_color=white",
+          "icon=basic/circle",
+          "size=15"
+        ]
+      ],
+      "base": "dem",
+      "calibrate": true,
+      "scanning_params": {
+        "smooth": 10,
+        "numscans": 2,
+        "interpolate": true
+      },
+      "analyses": "contours.py",
+      "profile": {
+        "relative_size": [
+          0.6,
+          0.2
+        ],
+        "relative_position": [
+          0.2,
+          0.95
+        ],
+        "limitx": [
+          0,
+          1100
+        ],
+        "limity": [
+          80,
+          140
+        ],
+        "ticks": 5,
+        "raster": "scan"
+      },
+      "instructions": "Computes contours with 5 m interval. Displays profile of the terrain cross-section.",
+      "title": "Contours"
+    },
+    {
+      "layers": [
+        [
+          "d.rast",
+          "map=slope"
+        ],
+        [
+          "d.vect",
+          "map=contours"
+        ],
+        [
+          "d.legend",
+          "raster=max_slope",
+          "title=\"Slope\"",
+          "font=Lato-Regular"
+        ]
+      ],
+      "base": "dem",
+      "scanning_params": {
+        "smooth": 10,
+        "numscans": 2,
+        "interpolate": true
+      },
+      "calibrate": true,
+      "analyses": "slope.py",
+      "instructions": "Computes slope in degrees.",
+      "title": "Slope"
+    },
+    {
+      "layers": [
+        [
+          "d.rast",
+          "map=aspect"
+        ],
+        [
+          "d.vect",
+          "map=contours"
+        ],
+        [
+          "d.legend",
+          "raster=aspect",
+          "title=\"Aspect\"",
+          "font=Lato-Regular"
+        ]
+      ],
+      "base": "dem",
+      "scanning_params": {
+        "smooth": 10,
+        "numscans": 2,
+        "interpolate": true
+      },
+      "analyses": "aspect.py",
+      "instructions": "Computes aspect in degrees.",
+      "title": "Aspect"
+    },
+    {
+      "layers": [
+        [
+          "d.rast",
+          "map=geomorphon_recoded"
+        ],
+        [
+          "d.vect",
+          "map=contours"
+        ],
+        [
+          "d.vect",
+          "map=peaks",
+          "color=0:0:0:255",
+          "fill_color=229:229:229",
+          "width=1",
+          "icon=basic/triangle",
+          "size=20"
+        ],
+        [
+          "d.legend",
+          "raster=geomorphon_recoded",
+          "title=\"Landforms\"",
+          "-c",
+          "use=1,2,3,6,9,10",
+          "at=20,55,3,10",
+          "font=Lato-Regular"
+        ]
+      ],
+      "base": "dem",
+      "scanning_params": {
+        "smooth": 10,
+        "numscans": 2,
+        "interpolate": true
+      },
+      "analyses": "geomorphons.py",
+      "instructions": "Computes landforms and derives peaks.",
+      "title": "Land forms"
+    },
+    {
+      "layers": [
+        [
+          "d.rast",
+          "map=diff"
+        ],
+        [
+          "d.vect",
+          "map=contours_dem"
+        ]
+      ],
+      "base": "dem",
+      "calibrate": true,
+      "scanning_params": {
+        "smooth": 10,
+        "numscans": 2,
+        "interpolate": false
+      },
+      "calibration_scanning_params": {
+        "smooth": 12,
+        "numscans": 2,
+        "interpolate": true
+      },
+      "analyses": "cutfill.py",
+      "instructions": "Computes difference from base raster, red is too high, blue is too low.",
+      "title": "Cut and fill"
+    },
+    {
+      "layers": [
+        [
+          "d.rast",
+          "map=depth"
+        ],
+        [
+          "d.rast",
+          "map=ponds"
+        ],
+        [
+          "d.vect",
+          "map=contours"
+        ]
+      ],
+      "base": "dem",
+      "layers_opacity": [
+        1,
+        1,
+        1
+      ],
+      "scanning_params": {
+        "smooth": 12,
+        "numscans": 2,
+        "interpolate": true
+      },
+      "analyses": "water.py",
+      "instructions": "Computes waterflow and ponding.",
+      "title": "Topo and water"
+    },
+    {
+      "layers": [
+        [
+          "d.vect",
+          "map=contours"
+        ],
+        [
+          "d.rast",
+          "map=trail"
+        ],
+        [
+          "d.vect",
+          "map=trail_points",
+          "color=red",
+          "fill_color=red",
+          "icon=basic/circle",
+          "size=15"
+        ],
+        [
+          "d.legend",
+          "raster=max_slope_trails",
+          "title=\"Trail slope\"",
+          "font=Lato-Regular",
+          "units=\" deg\"",
+          "label_values=0,5,10",
+          "digits=0",
+          "range=0,20",
+          "at=10,75,3,6"
+        ]
+      ],
+      "base": "dem",
+      "layers_opacity": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "calibrate": true,
+      "scanning_params": {
+        "smooth": 7,
+        "numscans": 2,
+        "interpolate": false
+      },
+      "calibration_scanning_params": {
+        "smooth": 7,
+        "numscans": 2,
+        "interpolate": true
+      },
+      "analyses": "trails.py",
+      "profile": {
+        "relative_size": [
+          0.6,
+          0.2
+        ],
+        "relative_position": [
+          0.2,
+          0.95
+        ],
+        "limitx": [
+          0,
+          2500
+        ],
+        "limity": [
+          80,
+          140
+        ],
+        "ticks": 5,
+        "raster": "scan_saved"
+      },
+      "instructions": "Creates a trail from predefined points and detected markers and computes slope along the trail.",
+      "title": "Trail"
+    }
+  ]
+}
