@@ -1,0 +1,21 @@
+{
+  "keyboard_events": {"stopTask": 370, "scanOnce": 344, "taskNext": 367, "taskPrevious": 366},
+  "tasks": [
+      {
+     "title": "Terrain, Trees, Depressions, and Points-of-Interest in Blender",
+      "layers": [
+         [
+          "d.rast",
+          "map=waterall"
+        ]
+      ],
+      "layers_opacity": [0.1],
+      "base": "scan",
+      "calibrate": false,
+      "scanning_params": {"smooth": 7, "numscans": 3, "zexag": 1.5, "interpolate": true},
+      "analyses": "combined_analysis.py", 
+      "filter" : {"threshold": 150, "debug": true},
+      "single_scan": false
+    }
+  ]
+}
